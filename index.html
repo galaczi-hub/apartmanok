@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vanili Apartments</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f7f6f3; color: #1a1a1a; min-height: 100vh; }
+
+  header { background: #fff; border-bottom: 1px solid #e8e6e0; padding: 20px 24px; text-align: center; }
+  header h1 { font-size: 22px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; }
+  header p { font-size: 13px; color: #888; margin-top: 5px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; padding: 20px 16px; max-width: 1100px; margin: 0 auto; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; padding: 12px; gap: 12px; } }
+
+  .card { background: #fff; border-radius: 14px; border: 1px solid #ece9e2; overflow: hidden; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .card:active { transform: scale(0.98); }
+  .card.foglalt { opacity: 0.45; cursor: default; pointer-events: none; }
+
+  .card-img { width: 100%; height: 190px; display: flex; align-items: center; justify-content: center; font-size: 52px; }
+  .card-body { padding: 14px 16px 16px; }
+  .card-title { font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 5px; }
+  .card-desc { font-size: 13px; color: #666; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+  .badge-green { background: #e2f5ec; color: #1a7a45; }
+  .badge-red { background: #fde8e8; color: #a01a1a; }
+  .persons { font-size: 12px; color: #888; }
+
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: flex-end; justify-content: center; }
+  @media (min-width: 640px) { .overlay { align-items: center; padding: 16px; } }
+  .overlay.open { display: flex; }
+
+  .modal { background: #fff; border-radius: 20px 20px 0 0; width: 100%; max-height: 92vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  @media (min-width: 640px) { .modal { border-radius: 16px; max-width: 520px; max-height: 90vh; } }
+
+  .modal-drag { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 12px auto 0; }
+  @media (min-width: 640px) { .modal-drag { display: none; } }
+
+  .modal-img { width: 100%; height: 220px; display: flex; align-items: center; justify-content: center; font-size: 72px; margin-top: 8px; }
+  .modal-body { padding: 16px 20px 32px; }
+  .modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .modal-title { font-size: 19px; font-weight: 600; line-height: 1.3; }
+  .close-btn { background: #f2f1ee; border: none; border-radius: 50%; width: 30px; height: 30px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #555; }
+  .modal-desc { font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 18px; }
+
+  .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .detail-item { background: #f7f6f3; border-radius: 10px; padding: 11px 13px; }
+  .detail-label { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+  .detail-val { font-size: 14px; font-weight: 600; }
+
+  .btn-row { display: flex; gap: 10px; flex-direction: column; }
+  .book-btn { display: block; width: 100%; padding: 14px; background: #1a1a1a; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.15s; }
+  .book-btn:hover { background: #333; }
+  .link-btn { display: block; width: 100%; padding: 12px; background: transparent; color: #1a1a1a; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.15s; }
+  .link-btn:hover { background: #f7f6f3; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Vanili Apartments</h1>
+  <p>Válassz a 8 apartman közül</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-img" id="modal-img"></div>
+    <div class="modal-body">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-title"></span>
+        <button class="close-btn" onclick="closeModal()">✕</button>
+      </div>
+      <p class="modal-desc" id="modal-desc"></p>
+      <div class="details-grid">
+        <div class="detail-item"><div class="detail-label">Személyek</div><div class="detail-val" id="m-persons"></div></div>
+        <div class="detail-item"><div class="detail-label">Méret</div><div class="detail-val" id="m-size"></div></div>
+        <div class="detail-item"><div class="detail-label">Ár / éjszaka</div><div class="detail-val" id="m-price"></div></div>
+        <div class="detail-item"><div class="detail-label">Típus</div><div class="detail-val" id="m-type"></div></div>
+      </div>
+      <div class="btn-row">
+        <a class="book-btn" id="modal-book" href="#" target="_blank">Foglalás →</a>
+        <a class="link-btn" id="modal-detail" href="#">Részletes oldal megtekintése</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const REPO = "galaczi-hub/apartmanok";
+const STATUS_URL = `https://raw.githubusercontent.com/${REPO}/main/status.json?t=${Date.now()}`;
+
+const apts = [
+  { id: "apt1", name: "Napsugár apartman", emoji: "☀️", color: "#FFF3DC", desc: "Délre néző, fényes lakás erkéllyel és panorámás kilátással.", long: "A Napsugár apartman déli tájolásának köszönhetően egész nap fényben úszik. A tágas nappali erkélyről festői kilátás nyílik a környező tájra. Teljesen felszerelt konyha, kényelmes ágyak és ingyenes wifi várja vendégeinket.", persons: "2–4 fő", size: "52 m²", price: "€85 / éj", type: "2 szobás", link: "#", page: "apt-1.html" },
+  { id: "apt2", name: "Bükk villa apartman", emoji: "🌲", color: "#E8F5E2", desc: "Erdőre néző, csendes légkörű apartman természetjáráshoz.", long: "Közvetlenül az erdő szélén található apartman teljes nyugalmat kínál. Reggeli kávéját a terasz bükkfái között kortyolgathatja.", persons: "2–3 fő", size: "45 m²", price: "€75 / éj", type: "1+1 szobás", link: "#", page: "apt-2.html" },
+  { id: "apt3", name: "Kőház apartman", emoji: "🪨", color: "#EEECEA", desc: "Rusztikus hangulatú, eredeti kőfalas belső térrel.", long: "Az eredeti kőfalak megőrzésével felújított apartman egyedülálló hangulatot teremt. Fa gerendás mennyezet, antik bútorok és modern fürdőszoba kombinációja teszi különlegessé.", persons: "2 fő", size: "38 m²", price: "€70 / éj", type: "Studio", link: "#", page: "apt-3.html" },
+  { id: "apt4", name: "Panoráma penthouse", emoji: "🌅", color: "#FDECEA", desc: "Tetőtéri luxus apartman 360 fokos kilátással.", long: "Az épület legfelső szintjén elhelyezkedő penthouse apartman páratlan kilátást nyújt. Nagy terasz, jacuzzi, prémium bútorok.", persons: "2–4 fő", size: "75 m²", price: "€140 / éj", type: "Penthouse", link: "#", page: "apt-4.html" },
+  { id: "apt5", name: "Levendula apartman", emoji: "💜", color: "#EEEDFE", desc: "Provence-i stílusú, levendulamezőre néző romantikus apartman.", long: "A levendulamezőre néző terasz, lila színvilágú berendezés és illatos friss virágok teszik különlegessé. Különösen ajánlott pároknak.", persons: "2 fő", size: "42 m²", price: "€80 / éj", type: "1 szobás", link: "#", page: "apt-5.html" },
+  { id: "apt6", name: "Tóparti apartman", emoji: "🏊", color: "#DFF0FB", desc: "Közvetlen tóparton, vízre néző terasszal. Strand 50 méterre.", long: "A tópart közvetlen közelében lévő apartman vízre néző terasza tökéletes relaxációhoz. A strand gyalog elérhető, csónak kölcsönző a ház előtt.", persons: "2–5 fő", size: "60 m²", price: "€110 / éj", type: "2 szobás", link: "#", page: "apt-6.html" },
+  { id: "apt7", name: "Szőlőhegyi apartman", emoji: "🍇", color: "#F5E8F2", desc: "Szőlőültetvény közepén, ingyenes borkóstolóval.", long: "A helyi szőlőültetvény kellős közepén megbúvó apartman vendégei ingyenes borkóstolón vehetnek részt. Ősszel a szüretelés is megcsodálható.", persons: "2–3 fő", size: "48 m²", price: "€90 / éj", type: "1+1 szobás", link: "#", page: "apt-7.html" },
+  { id: "apt8", name: "Hegyi menedék", emoji: "⛰️", color: "#ECEAE6", desc: "Magas fekvésű, hegycsúcsra néző apartman kandallóval.", long: "800 méter tengerszint feletti magasságban fekvő apartman télen és nyáron egyaránt különleges élményt nyújt. Saját kandallóval és panorámás fürdőszobával felszerelt.", persons: "2–4 fő", size: "55 m²", price: "€95 / éj", type: "2 szobás", link: "#", page: "apt-8.html" },
+];
+
+let status = {};
+
+async function loadStatus() {
+  try {
+    const res = await fetch(STATUS_URL);
+    status = await res.json();
+  } catch(e) {
+    apts.forEach(a => status[a.id] = true);
+  }
+  renderCards();
+}
+
+function renderCards() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  apts.forEach((a, i) => {
+    const free = status[a.id] !== false;
+    const card = document.createElement('div');
+    card.className = 'card' + (free ? '' : ' foglalt');
+    if (free) card.onclick = () => openModal(i);
+    card.innerHTML = `
+      <div class="card-img" style="background:${a.color}">${a.emoji}</div>
+      <div class="card-body">
+        <div class="card-title">${a.name}</div>
+        <div class="card-desc">${a.desc}</div>
+        <div class="card-footer">
+          <span class="badge ${free ? 'badge-green' : 'badge-red'}">${free ? 'Elérhető' : 'Foglalt'}</span>
+          <span class="persons">👥 ${a.persons}</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function openModal(i) {
+  const a = apts[i];
+  const img = document.getElementById('modal-img');
+  img.textContent = a.emoji;
+  img.style.background = a.color;
+  document.getElementById('modal-title').textContent = a.name;
+  document.getElementById('modal-desc').textContent = a.long;
+  document.getElementById('m-persons').textContent = a.persons;
+  document.getElementById('m-size').textContent = a.size;
+  document.getElementById('m-price').textContent = a.price;
+  document.getElementById('m-type').textContent = a.type;
+  document.getElementById('modal-book').href = a.link;
+  document.getElementById('modal-detail').href = a.page;
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+loadStatus();
+</script>
+</body>
+</html>
