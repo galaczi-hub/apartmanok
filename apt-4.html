@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mecset apartman — Vanili Apartments</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 40%, #fef9c3 70%, #fce7f3 100%);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 20% 20%, rgba(56,189,248,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 500px at 80% 10%, rgba(167,243,208,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 700px 400px at 50% 90%, rgba(253,224,71,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 400px at 90% 70%, rgba(249,168,212,0.15) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  .back { position: relative; z-index: 1; padding: 20px 20px 0; }
+  .back a {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 14px; font-weight: 500;
+    color: rgba(15,23,42,0.6); text-decoration: none;
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.7);
+    padding: 8px 16px; border-radius: 30px;
+    transition: background 0.15s;
+  }
+  .back a:hover { background: rgba(255,255,255,0.7); color: #0f172a; }
+
+  .hero {
+    position: relative; z-index: 1;
+    width: calc(100% - 32px); margin: 16px auto 0;
+    height: 260px; border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 90px;
+    background: rgba(253, 230, 138, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.7);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+  @media (min-width: 640px) { .hero { height: 320px; font-size: 110px; } }
+
+  .content {
+    position: relative; z-index: 1;
+    max-width: 600px; margin: 0 auto; padding: 20px 20px 48px;
+  }
+
+  .glass-card {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.8);
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 0 rgba(255,255,255,0.9) inset;
+    padding: 22px 22px 24px;
+    margin-bottom: 14px;
+  }
+
+  .apt-title { font-size: 24px; font-weight: 800; color: #0f172a; letter-spacing: -0.5px; margin-bottom: 10px; }
+  .status-badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; backdrop-filter: blur(8px); }
+  .badge-green { background: rgba(187,247,208,0.7); color: #14532d; border: 1px solid rgba(74,222,128,0.3); }
+  .badge-red { background: rgba(254,202,202,0.7); color: #7f1d1d; border: 1px solid rgba(248,113,113,0.3); }
+  .apt-short { font-size: 15px; color: rgba(15,23,42,0.65); line-height: 1.7; }
+
+  .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .detail-item {
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 16px; padding: 14px 16px;
+  }
+  .detail-label { font-size: 10px; color: rgba(15,23,42,0.4); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  .detail-val { font-size: 14px; font-weight: 700; color: #0f172a; }
+
+  .section-title { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 10px; letter-spacing: 0.2px; }
+  .apt-desc { font-size: 14px; color: rgba(15,23,42,0.65); line-height: 1.8; white-space: pre-line; }
+
+  .back-btn {
+    display: block; width: 100%; padding: 15px;
+    background: rgba(15,23,42,0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 16px; font-size: 15px; font-weight: 600;
+    color: #0f172a; text-align: center; text-decoration: none;
+    transition: background 0.15s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.6); }
+</style>
+</head>
+<body>
+<div class="back"><a href="index.html">← Összes apartman</a></div>
+<div class="hero">🕌</div>
+<div class="content">
+  <div class="glass-card">
+    <div class="apt-title">Mecset apartman</div>
+    <div class="status-badge" id="statusBadge">...</div>
+    <p class="apt-short">Az apartman Santa Pola de Este városrészében, Ezeregy éjszaka meséibe illő atmoszférájú épületkomplexumban, belső patiókkal, szökőkutakkal, úszómedencével várja vendégeit a Playa Varadero bejáratánál.</p>
+  </div>
+  <div class="glass-card">
+    <div class="details-grid">
+      <div class="detail-item"><div class="detail-label">Személyek</div><div class="detail-val">4–5 fő</div></div>
+      <div class="detail-item"><div class="detail-label">Méret</div><div class="detail-val">70 m²</div></div>
+      <div class="detail-item"><div class="detail-label">Ár / éjszaka</div><div class="detail-val">85 €/éjtől</div></div>
+      <div class="detail-item"><div class="detail-label">Típus</div><div class="detail-val">2 hálószoba</div></div>
+    </div>
+  </div>
+  <div class="glass-card">
+    <div class="section-title">Az apartmanról</div>
+    <p class="apt-desc">Az apartmanban a kelet varázsa találkozik a mediterrán életérzéssel. Teljes felszereltséggel: mosó- és mosogatógép, központi hűtő/fűtő klíma, WiFi, Smart TV, hűtőszekrény, mikrohullámú sütő, kávéfőző, vízforraló, hajszárító, több garnitúra törölköző, strandfelszerelések.
+
+2 hálószoba, fürdőszoba, nappali és konyha, tengerre néző terasz. A keleties építészet eleganciája a belső terekben is visszaköszön, a Playa Varadero pedig karnyújtásnyira van.</p>
+  </div>
+  <a class="back-btn" href="index.html">← Vissza az összes apartmanhoz</a>
+</div>
+<script>
+const APT_ID = "apt4";
+const STATUS_URL = `https://raw.githubusercontent.com/galaczi-hub/apartmanok/main/status.json?t=${Date.now()}`;
+async function loadStatus() {
+  try {
+    const res = await fetch(STATUS_URL);
+    const data = await res.json();
+    const free = data[APT_ID] !== false;
+    const badge = document.getElementById('statusBadge');
+    badge.textContent = free ? '✅ Elérhető' : '🔴 Foglalt';
+    badge.className = 'status-badge ' + (free ? 'badge-green' : 'badge-red');
+  } catch(e) {}
+}
+loadStatus();
+</script>
+</body>
+</html>
