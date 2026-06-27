@@ -8,26 +8,27 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 40%, #fef9c3 70%, #fce7f3 100%);
-    background-attachment: fixed;
-  }
+  body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+  min-height: 100vh; 
+  
+  /* A feltöltött naplementés kép beállításai */
+  background-image: url('naplemente.jpg'); /* Írd át a kép saját fájlnevére! */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
+}  
 
-  /* Floating background blobs */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 600px 400px at 20% 20%, rgba(56,189,248,0.18) 0%, transparent 70%),
-      radial-gradient(ellipse 500px 500px at 80% 10%, rgba(167,243,208,0.15) 0%, transparent 70%),
-      radial-gradient(ellipse 700px 400px at 50% 90%, rgba(253,224,71,0.12) 0%, transparent 70%),
-      radial-gradient(ellipse 400px 400px at 90% 70%, rgba(249,168,212,0.15) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
+/* Egy lágy sötétítő réteg, hogy a fehér betűk és az üveg kártyák jobban elkülönüljenek */
+body::before { 
+  content: ''; 
+  position: fixed; 
+  inset: 0; 
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.25));
+  pointer-events: none; 
+  z-index: 0; 
+}
 
   header {
     position: relative;
