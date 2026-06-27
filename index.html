@@ -277,11 +277,21 @@ const apts = [
     desc: "Ahol Alicante pezsgő városi élete találkozik a mediterrán nyugalommal.", long: "Van hely, ahol az ember turista marad... és van hely, ahol néhány napra úgy érzi, mintha ide tartozna. A Vanili Serra Grossa apartman pontosan ezt az élményt kínálja Alicante egyik legkedveltebb részén.",
     persons: "4–5 fő", size: "80 m²", price: "120 €/éjtől", type: "2 hálószoba",
     page: "apt-6.html" },
-  { id: "apt7", name: "Alicante Big Holiday", emoji: "🏔️", color: "rgba(254, 202, 202, 0.6)",
-    desc: "Ahol a luxus, a tér és a panoráma találkozik — Alicante szívében.", long: "Lépj be az Alicante Big Holiday apartmanba, ahol a modern elegancia és az otthon melege tökéletes összhangot alkot. A teljeskörűen felújított apartman prémium minőségű berendezésével a luxus érzetét nyújtja minden vendég számára.",
-    persons: "7 fő", size: "100 m²", price: "120 €/éjtől", type: "3 hálószoba",
-    page: "apt-7.html" },
-
+// 1. Kiegészítettem az apt7 objektumot egy 'image' tulajdonsággal
+  { 
+    id: "apt7", 
+    name: "Alicante Big Holiday", 
+    emoji: "🏔️", 
+    color: "rgba(254, 202, 202, 0.6)",
+    image: "bigholiday.jpeg", // Ide bekerült a képfájl neve!
+    desc: "Ahol a luxus, a tér és a panoráma találkozik — Alicante szívében.", 
+    long: "Lépj be az Alicante Big Holiday apartmanba, ahol a modern elegancia és az otthon melege tökéletes összhangot alkot. A teljeskörűen felújított apartman prémium minőségű berendezésével a luxus érzetét nyújtja minden vendég számára.",
+    persons: "7 fő", 
+    size: "100 m²", 
+    price: "120 €/éjtől", 
+    type: "3 hálószoba",
+    page: "apt-7.html" 
+  },
 ];
 
 let status = {};
@@ -296,6 +306,7 @@ async function loadStatus() {
   renderCards();
 }
 
+// 2. JAVÍTOTT KÁRTYA GENERÁLÁS (Képkezeléssel és liquid glass finomítással)
 function renderCards() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
@@ -304,8 +315,15 @@ function renderCards() {
     const card = document.createElement('div');
     card.className = 'card' + (free ? '' : ' foglalt');
     if (free) card.onclick = () => openModal(i);
+    
+    // Ha van kép, azt rakja be háttérnek emoji nélkül, ha nincs, marad a régi emoji+szín
+    const imgStyle = a.image 
+      ? `background-image: url('${a.image}'); background-size: cover; background-position: center;` 
+      : `background:${a.color}`;
+    const imgContent = a.image ? '' : a.emoji;
+
     card.innerHTML = `
-      <div class="card-img" style="background:${a.color}">${a.emoji}</div>
+      <div class="card-img" style="${imgStyle}">${imgContent}</div>
       <div class="card-body">
         <div class="card-title">${a.name}</div>
         <div class="card-desc">${a.desc}</div>
@@ -318,11 +336,22 @@ function renderCards() {
   });
 }
 
+// 3. JAVÍTOTT MODAL MEGJELENÍTÉS (Ha rákattintasz a kártyára, a felugró ablakban is a kép jelenik meg)
 function openModal(i) {
   const a = apts[i];
   const img = document.getElementById('modal-img');
-  img.textContent = a.emoji;
-  img.style.background = a.color;
+  
+  if (a.image) {
+    img.textContent = '';
+    img.style.backgroundImage = `url('${a.image}')`;
+    img.style.backgroundSize = 'cover';
+    img.style.backgroundPosition = 'center';
+  } else {
+    img.textContent = a.emoji;
+    img.style.backgroundImage = 'none';
+    img.style.background = a.color;
+  }
+  
   document.getElementById('modal-title').textContent = a.name;
   document.getElementById('modal-desc').textContent = a.long;
   document.getElementById('m-persons').textContent = a.persons;
@@ -346,5 +375,6 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
 loadStatus();
 </script>
+
 </body>
 </html>
