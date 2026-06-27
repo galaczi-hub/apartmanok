@@ -12,18 +12,17 @@
     min-height: 100vh;
   }
 
-  /* FIX HÁTTÉR RÉTEG - Beállítva a bigholiday.jpeg képhez */
+  /* AZ EGÉSZ OLDAL HÁTTERE (Naplemente) */
   .fixed-background {
     position: fixed;
     inset: 0;
-    background-image: url('bigholiday.jpeg'); /* Itt a kért fájlnév */
+    background-image: url('naplemente.jpg'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     z-index: -2;
   }
 
-  /* Lágy sötétítő és kontrasztnövelő réteg a háttér felett */
   .fixed-background::before { 
     content: ''; 
     position: absolute; 
@@ -32,12 +31,12 @@
     z-index: -1; 
   }
 
-  /* VISSZA GOMB STÍLUSA */
+  /* VISSZA GOMB */
   .back { position: relative; z-index: 1; padding: 20px 20px 0; }
   .back a {
     display: inline-flex; align-items: center; gap: 6px;
     font-size: 14px; font-weight: 500;
-    color: #ffffff; /* Fehér szöveg a sötétebb égbolton */
+    color: #ffffff;
     text-shadow: 0 1px 4px rgba(0,0,0,0.3);
     text-decoration: none;
     background: rgba(255, 255, 255, 0.15);
@@ -49,28 +48,39 @@
   }
   .back a:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-1px); }
 
-  /* LIQUID GLASS HERO (Óriás emoji doboz) */
+  /* FELSŐ APARTMAN FOTÓ (A korábbi emoji helyett) */
   .hero {
     position: relative; z-index: 1;
     width: calc(100% - 32px); margin: 16px auto 0;
     height: 260px; border-radius: 24px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 90px;
-    /* Pirosas helyett igazi üveghatást kapott */
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(20px) saturate(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.3) inset;
+    
+    /* Ide került be a bigholiday.jpeg kép háttérnek! */
+    background-image: url('bigholiday.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
   }
-  @media (min-width: 640px) { .hero { height: 320px; font-size: 110px; } }
+  @media (min-width: 640px) { .hero { height: 320px; } }
+
+  /* Folyékony üveg hatású belső árnyékoló réteg a fotón */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 60%);
+    pointer-events: none;
+  }
 
   .content {
     position: relative; z-index: 1;
     max-width: 600px; margin: 0 auto; padding: 20px 20px 48px;
   }
 
-  /* LIQUID GLASS CARD (Fő információs blokk) */
+  /* LIQUID GLASS CARD */
   .glass-card {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(24px) saturate(160%);
@@ -85,14 +95,13 @@
     margin-bottom: 14px;
   }
 
-  /* Szövegek olvashatósága finomítva */
   .apt-title { font-size: 24px; font-weight: 800; color: #0b0f19; letter-spacing: -0.5px; margin-bottom: 10px; }
   .status-badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 14px; backdrop-filter: blur(8px); }
   .badge-green { background: rgba(187,247,208,0.85); color: #14532d; border: 1px solid rgba(74,222,128,0.4); }
   .badge-red { background: rgba(254,202,202,0.85); color: #7f1d1d; border: 1px solid rgba(248,113,113,0.4); }
   .apt-short { font-size: 15px; color: rgba(11, 15, 25, 0.75); line-height: 1.7; }
 
-  /* KISEBB CSEMPÉK (Személyek, méret, ár grid) */
+  /* KISEBB CSEMPÉK */
   .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .detail-item {
     background: rgba(255, 255, 255, 0.25);
@@ -110,7 +119,7 @@
   /* ALSÓ FŐ VISSZA GOMB */
   .back-btn {
     display: block; width: 100%; padding: 15px;
-    background: rgba(15, 23, 42, 0.85); /* Sötétebb, elegánsabb gomb, ami kiemelkedik az üveglapok közül */
+    background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,0.15);
     border-radius: 16px; font-size: 15px; font-weight: 600;
@@ -123,16 +132,15 @@
 </head>
 <body>
 
-<!-- ÚJ FIX HÁTTÉR ELEM -->
+<!-- AZ OLDAL FIX MÖGÖTTI HÁTTERE -->
 <div class="fixed-background"></div>
 
 <div class="back">
   <a href="#">← Vissza a listához</a>
 </div>
 
-<div class="hero">
-  🏖️
-</div>
+<!-- A KÁRTYA, AMI MOST MÁR AZ APARTMAN KÉPÉT MUTATJA -->
+<div class="hero"></div>
 
 <div class="content">
   <div class="glass-card">
