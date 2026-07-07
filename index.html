@@ -3,34 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elérhető Apartmanjaink</title>
+<title>Vanili Apartments</title>
 <style>
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body { 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-    min-height: 100vh; 
-  }  
-
-  /* FIX HÁTTÉR RÉTEG - Megoldja a mozgási és blur problémát */
-  .fixed-background {
-    position: fixed;
-    inset: 0;
-    background-image: url('naplemente.jpg'); /* Ellenőrizd a saját fájlnevedet! */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -2;
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 40%, #fef9c3 70%, #fce7f3 100%);
+    background-attachment: fixed;
   }
 
-  /* Lágy sötétítő és kontrasztnövelő réteg a háttér felett */
-  .fixed-background::before { 
-    content: ''; 
-    position: absolute; 
-    inset: 0; 
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.25));
-    z-index: -1; 
+  /* Floating background blobs */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 20% 20%, rgba(56,189,248,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 500px at 80% 10%, rgba(167,243,208,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 700px 400px at 50% 90%, rgba(253,224,71,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 400px 400px at 90% 70%, rgba(249,168,212,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
   }
 
   header {
@@ -45,15 +41,13 @@
     font-weight: 700;
     letter-spacing: 4px;
     text-transform: uppercase;
-    color: #ffffff; /* Fehérre cserélve a jobb olvashatóságért a sötét égbolton */
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    color: #0f172a;
     margin-bottom: 6px;
   }
 
   header p {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.8); /* Világosítva a háttér miatt */
-    text-shadow: 0 1px 5px rgba(0,0,0,0.3);
+    color: rgba(15,23,42,0.55);
     letter-spacing: 0.5px;
   }
 
@@ -73,41 +67,31 @@
     header h1 { font-size: 22px; }
   }
 
-  /* IGAZI LIQUID GLASS CARD */
+  /* LIQUID GLASS CARD */
   .card {
-    /* Visszafogottabb fehér alap, hogy a naplemente átüssön rajta */
-    background: rgba(255, 255, 255, 0.15);
-    
-    /* Erőteljes elmosás az igazi üvegérzethez */
-    backdrop-filter: blur(18px) saturate(160%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    
+    background: rgba(255,255,255,0.45);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border-radius: 22px;
-    
-    /* Vékony, csillogó üvegszegély */
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    
-    /* Mélyebb árnyékok a lebegő hatásért és belső ragyogás */
+    border: 1px solid rgba(255,255,255,0.7);
     box-shadow:
-      0 10px 30px rgba(0,0,0,0.15),
-      0 1px 2px rgba(255,255,255,0.4) inset,
-      0 -1px 2px rgba(0,0,0,0.1) inset;
-      
+      0 4px 24px rgba(0,0,0,0.06),
+      0 1px 2px rgba(255,255,255,0.8) inset,
+      0 -1px 2px rgba(0,0,0,0.04) inset;
     overflow: hidden;
     cursor: pointer;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
 
   .card:hover {
-    transform: translateY(-6px) scale(1.01);
-    background: rgba(255, 255, 255, 0.22); /* Kicsit kivilágosodik hoverre */
+    transform: translateY(-4px) scale(1.01);
     box-shadow:
-      0 20px 40px rgba(0,0,0,0.25),
-      0 1px 3px rgba(255,255,255,0.6) inset;
+      0 16px 48px rgba(0,0,0,0.1),
+      0 1px 2px rgba(255,255,255,0.9) inset;
   }
 
   .card:active { transform: scale(0.98); }
-  .card.foglalt { opacity: 0.35; cursor: default; pointer-events: none; }
+  .card.foglalt { opacity: 0.4; cursor: default; pointer-events: none; }
 
   .card-img {
     width: 100%;
@@ -117,21 +101,18 @@
     justify-content: center;
     font-size: 56px;
     position: relative;
-    background: rgba(255, 255, 255, 0.05); /* Halvány alap az emojik mögé */
   }
 
   .card-img::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 40%, rgba(255,255,255,0.15) 100%);
+    background: linear-gradient(180deg, transparent 40%, rgba(255,255,255,0.3) 100%);
   }
 
   .card-body { padding: 14px 18px 18px; }
-  
-  /* Sötétített szöveg színek a tökéletes olvashatóságért a világosabb üveglapon */
-  .card-title { font-size: 16px; font-weight: 700; color: #0b0f19; margin-bottom: 6px; }
-  .card-desc { font-size: 13px; color: rgba(11, 15, 25, 0.7); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-title { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+  .card-desc { font-size: 13px; color: rgba(15,23,42,0.6); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
   .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
 
@@ -140,86 +121,81 @@
     backdrop-filter: blur(8px);
     letter-spacing: 0.3px;
   }
-  .badge-green { background: rgba(187,247,208,0.85); color: #14532d; border: 1px solid rgba(74,222,128,0.4); }
-  .badge-red { background: rgba(254,202,202,0.85); color: #7f1d1d; border: 1px solid rgba(248,113,113,0.4); }
-  .persons { font-size: 12px; color: rgba(11, 15, 25, 0.6); }
+  .badge-green { background: rgba(187,247,208,0.7); color: #14532d; border: 1px solid rgba(74,222,128,0.3); }
+  .badge-red { background: rgba(254,202,202,0.7); color: #7f1d1d; border: 1px solid rgba(248,113,113,0.3); }
+  .persons { font-size: 12px; color: rgba(15,23,42,0.5); }
 
   /* MODAL OVERLAY */
   .overlay {
     display: none; position: fixed; inset: 0;
-    background: rgba(10, 15, 26, 0.4); /* Sötétebb overlay a drámaibb hatásért */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(15,23,42,0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 200; align-items: flex-end; justify-content: center;
   }
   @media (min-width: 640px) { .overlay { align-items: center; padding: 20px; } }
   .overlay.open { display: flex; }
 
-  /* ULTRA GLASS MODAL */
   .modal {
-    background: rgba(255, 255, 255, 0.35);
-    backdrop-filter: blur(35px) saturate(180%);
-    -webkit-backdrop-filter: blur(35px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    box-shadow: 0 32px 80px rgba(0,0,0,0.3), 0 1px 0 rgba(255,255,255,0.5) inset;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid rgba(255,255,255,0.85);
+    box-shadow: 0 32px 80px rgba(0,0,0,0.15), 0 1px 0 rgba(255,255,255,0.9) inset;
     border-radius: 28px 28px 0 0;
     width: 100%; max-height: 92vh; overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
   @media (min-width: 640px) { .modal { border-radius: 24px; max-width: 540px; max-height: 88vh; } }
 
-  .modal-drag { width: 36px; height: 4px; background: rgba(0,0,0,0.2); border-radius: 2px; margin: 14px auto 0; }
+  .modal-drag { width: 36px; height: 4px; background: rgba(0,0,0,0.15); border-radius: 2px; margin: 14px auto 0; }
   @media (min-width: 640px) { .modal-drag { display: none; } }
 
-  .modal-img { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 72px; margin-top: 8px; border-radius: 16px; margin: 10px 16px; width: calc(100% - 32px); background: rgba(255,255,255,0.1); }
+  .modal-img { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 72px; margin-top: 8px; border-radius: 16px; margin: 10px 16px; width: calc(100% - 32px); }
   .modal-body { padding: 16px 22px 32px; }
   .modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
   .modal-title { font-size: 20px; font-weight: 700; color: #0f172a; line-height: 1.3; }
 
   .close-btn {
-    background: rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.08);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid rgba(255,255,255,0.5);
     border-radius: 50%; width: 32px; height: 32px;
     font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; color: #0f172a; margin-top: 2px;
+    flex-shrink: 0; color: #475569; margin-top: 2px;
   }
 
-  .modal-desc { font-size: 14px; color: rgba(15,23,42,0.75); line-height: 1.7; margin-bottom: 18px; }
+  .modal-desc { font-size: 14px; color: rgba(15,23,42,0.65); line-height: 1.7; margin-bottom: 18px; }
 
   .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-  
   .detail-item {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255,255,255,0.5);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255,255,255,0.7);
     border-radius: 14px; padding: 12px 14px;
   }
-  .detail-label { font-size: 10px; color: rgba(15,23,42,0.5); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .detail-label { font-size: 10px; color: rgba(15,23,42,0.4); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
   .detail-val { font-size: 14px; font-weight: 700; color: #0f172a; }
 
   .detail-btn {
     display: block; width: 100%; padding: 15px;
-    background: rgba(15, 23, 42, 0.9);
+    background: rgba(15,23,42,0.85);
     backdrop-filter: blur(8px);
     color: #fff; border: none; border-radius: 16px;
     font-size: 15px; font-weight: 700; cursor: pointer;
     text-align: center; text-decoration: none;
-    box-shadow: 0 4px 16px rgba(15,23,42,0.25);
+    box-shadow: 0 4px 16px rgba(15,23,42,0.2);
     transition: background 0.15s;
   }
-  .detail-btn:hover { background: #0f172a; }
+  .detail-btn:hover { background: rgba(15,23,42,0.95); }
 
 </style>
 </head>
 <body>
 
-<!-- ÚJ FIX HÁTTÉR ELEM -->
-<div class="fixed-background"></div>
-
 <header>
-  <h1>Elérhető Apartmanjaink</h1>
-  
+  <h1>Vanili Apartments</h1>
+  <p>Elérhető apartmanjaink</p>
 </header>
 
 <div class="grid" id="grid"></div>
@@ -246,9 +222,6 @@
 </div>
 
 <script>
-  
-
-
 const REPO = "galaczi-hub/apartmanok";
 const STATUS_URL = `https://raw.githubusercontent.com/${REPO}/main/status.json?t=${Date.now()}`;
 
@@ -261,7 +234,7 @@ const apts = [
     desc: "A Casa del Solban minden nap egy tengerre néző mosollyal kezdődik.", long: "A Casa del Sol Santa Pola a tengerparttól legfeljebb 2 perc sétára helyezkedik el. A lakásból tengerre néző kilátás nyílik – reggelente a napfelkeltét a saját teraszodról nézheted, este pedig a hullámok morajlása ringat el.",
     persons: "4–5 fő", size: "60 m²", price: "85 €/éjtől", type: "2 hálószoba",
     page: "apt-2.html" },
-  { id: "apt3", name: "Avenida Argentina", emoji: "🌅", color: "rgba(254, 243, 199, 0.6)",
+  { id: "apt3", name: "Avenida Argentina", emoji: "", color: "rgba(254, 243, 199, 0.6)", img: "argentina.JPG",
     desc: "Ahol a modern kényelem és a tenger látványa minden nap különleges élménnyé válik.", long: "Az Avenida Argentina apartman Santa Pola keleti városrészében, a tengerparthoz és a parti sétányhoz közel található. Élvezd a nyugodt környezetet anélkül, hogy lemondanál a kényelemről és a tenger látványáról!",
     persons: "4–5 fő", size: "70 m²", price: "85 €/éjtől", type: "2 hálószoba, 2 fürdőszoba",
     page: "apt-3.html" },
@@ -277,21 +250,11 @@ const apts = [
     desc: "Ahol Alicante pezsgő városi élete találkozik a mediterrán nyugalommal.", long: "Van hely, ahol az ember turista marad... és van hely, ahol néhány napra úgy érzi, mintha ide tartozna. A Vanili Serra Grossa apartman pontosan ezt az élményt kínálja Alicante egyik legkedveltebb részén.",
     persons: "4–5 fő", size: "80 m²", price: "120 €/éjtől", type: "2 hálószoba",
     page: "apt-6.html" },
-// 1. Kiegészítettem az apt7 objektumot egy 'image' tulajdonsággal
-  { 
-    id: "apt7", 
-    name: "Alicante Big Holiday", 
-    emoji: "🏔️", 
-    color: "rgba(254, 202, 202, 0.6)",
-    image: "bigholiday.jpeg", // Ide bekerült a képfájl neve!
-    desc: "Ahol a luxus, a tér és a panoráma találkozik — Alicante szívében.", 
-    long: "Lépj be az Alicante Big Holiday apartmanba, ahol a modern elegancia és az otthon melege tökéletes összhangot alkot. A teljeskörűen felújított apartman prémium minőségű berendezésével a luxus érzetét nyújtja minden vendég számára.",
-    persons: "7 fő", 
-    size: "100 m²", 
-    price: "120 €/éjtől", 
-    type: "3 hálószoba",
-    page: "apt-7.html" 
-  },
+  { id: "apt7", name: "Alicante Big Holiday", emoji: "🏔️", color: "rgba(254, 202, 202, 0.6)",
+    desc: "Ahol a luxus, a tér és a panoráma találkozik — Alicante szívében.", long: "Lépj be az Alicante Big Holiday apartmanba, ahol a modern elegancia és az otthon melege tökéletes összhangot alkot. A teljeskörűen felújított apartman prémium minőségű berendezésével a luxus érzetét nyújtja minden vendég számára.",
+    persons: "7 fő", size: "100 m²", price: "120 €/éjtől", type: "3 hálószoba",
+    page: "apt-7.html" },
+
 ];
 
 let status = {};
@@ -306,7 +269,6 @@ async function loadStatus() {
   renderCards();
 }
 
-// 2. JAVÍTOTT KÁRTYA GENERÁLÁS (Képkezeléssel és liquid glass finomítással)
 function renderCards() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
@@ -315,15 +277,11 @@ function renderCards() {
     const card = document.createElement('div');
     card.className = 'card' + (free ? '' : ' foglalt');
     if (free) card.onclick = () => openModal(i);
-    
-    // Ha van kép, azt rakja be háttérnek emoji nélkül, ha nincs, marad a régi emoji+szín
-    const imgStyle = a.image 
-      ? `background-image: url('${a.image}'); background-size: cover; background-position: center;` 
+    const imgStyle = a.img
+      ? `background:${a.color}; background-image:url('${a.img}'); background-size:cover; background-position:center;`
       : `background:${a.color}`;
-    const imgContent = a.image ? '' : a.emoji;
-
     card.innerHTML = `
-      <div class="card-img" style="${imgStyle}">${imgContent}</div>
+      <div class="card-img" style="${imgStyle}">${a.img ? '' : a.emoji}</div>
       <div class="card-body">
         <div class="card-title">${a.name}</div>
         <div class="card-desc">${a.desc}</div>
@@ -336,22 +294,11 @@ function renderCards() {
   });
 }
 
-// 3. JAVÍTOTT MODAL MEGJELENÍTÉS (Ha rákattintasz a kártyára, a felugró ablakban is a kép jelenik meg)
 function openModal(i) {
   const a = apts[i];
   const img = document.getElementById('modal-img');
-  
-  if (a.image) {
-    img.textContent = '';
-    img.style.backgroundImage = `url('${a.image}')`;
-    img.style.backgroundSize = 'cover';
-    img.style.backgroundPosition = 'center';
-  } else {
-    img.textContent = a.emoji;
-    img.style.backgroundImage = 'none';
-    img.style.background = a.color;
-  }
-  
+  img.textContent = a.emoji;
+  img.style.background = a.color;
   document.getElementById('modal-title').textContent = a.name;
   document.getElementById('modal-desc').textContent = a.long;
   document.getElementById('m-persons').textContent = a.persons;
@@ -375,6 +322,5 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
 loadStatus();
 </script>
-
 </body>
 </html>
