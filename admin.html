@@ -3,45 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin —  Apartments</title>
+<title>Admin — Vanili Apartments</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f7f6f3; color: #1a1a1a; min-height: 100vh; }
-
   .login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; }
   .login-box { background: #fff; border-radius: 16px; border: 1px solid #ece9e2; padding: 32px 28px; width: 100%; max-width: 360px; text-align: center; }
   .login-box h1 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
   .login-box p { font-size: 13px; color: #888; margin-bottom: 24px; }
-  .login-box input { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; margin-bottom: 12px; }
+  .field-label { font-size: 12px; color: #aaa; text-align: left; margin-bottom: 4px; margin-top: 8px; }
+  .login-box input { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; margin-bottom: 4px; }
   .login-box input:focus { border-color: #1a1a1a; }
-  .login-btn { width: 100%; padding: 13px; background: #1a1a1a; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .login-btn { width: 100%; padding: 13px; background: #1a1a1a; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 12px; }
   .login-btn:hover { background: #333; }
   .error { color: #c0392b; font-size: 13px; margin-top: 8px; display: none; }
-
   .admin-screen { display: none; max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
   header { text-align: center; margin-bottom: 24px; padding-top: 20px; }
   header h1 { font-size: 20px; font-weight: 600; letter-spacing: 1px; }
   header p { font-size: 13px; color: #888; margin-top: 4px; }
-
   .apt-list { display: flex; flex-direction: column; gap: 10px; }
-  .apt-row { background: #fff; border-radius: 14px; border: 1px solid #ece9e2; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: opacity 0.2s; }
+  .apt-row { background: #fff; border-radius: 14px; border: 1px solid #ece9e2; padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .apt-info { display: flex; align-items: center; gap: 12px; }
   .apt-emoji { font-size: 28px; }
   .apt-name { font-size: 15px; font-weight: 500; }
   .apt-status { font-size: 12px; color: #888; margin-top: 2px; }
-
-  /* Toggle switch */
   .toggle { position: relative; width: 52px; height: 30px; flex-shrink: 0; }
   .toggle input { opacity: 0; width: 0; height: 0; }
   .slider { position: absolute; inset: 0; background: #ddd; border-radius: 30px; cursor: pointer; transition: background 0.2s; }
   .slider:before { content: ''; position: absolute; width: 22px; height: 22px; left: 4px; top: 4px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
   input:checked + .slider { background: #2ecc71; }
   input:checked + .slider:before { transform: translateX(22px); }
-
   .save-btn { width: 100%; margin-top: 20px; padding: 15px; background: #1a1a1a; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
   .save-btn:hover { background: #333; }
   .save-btn:disabled { background: #999; cursor: not-allowed; }
-
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
   .toast.show { opacity: 1; }
 </style>
@@ -51,19 +45,21 @@
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <h1>🏡 Admin belépés</h1>
-    <p> Apartments kezelőfelület</p>
-    <input type="password" id="pwInput" placeholder="Jelszó" onkeydown="if(event.key==='Enter')login()">
+    <p>Vanili Apartments kezelőfelület</p>
+    <div class="field-label">Jelszó</div>
+    <input type="password" id="pwInput" placeholder="Jelszó" onkeydown="if(event.key==='Enter')document.getElementById('tokenInput').focus()">
+    <div class="field-label">GitHub Token</div>
+    <input type="password" id="tokenInput" placeholder="ghp_..." onkeydown="if(event.key==='Enter')login()">
     <button class="login-btn" onclick="login()">Belépés</button>
-    <div class="error" id="loginError">Hibás jelszó</div>
+    <div class="error" id="loginError"></div>
   </div>
 </div>
 
 <div class="admin-screen" id="adminScreen">
   <header>
-    <h1> Apartments</h1>
+    <h1>Vanili Apartments</h1>
     <p>Apartman elérhetőség kezelése</p>
   </header>
-
   <div class="apt-list" id="aptList"></div>
   <button class="save-btn" id="saveBtn" onclick="saveStatus()">💾 Mentés és közzététel</button>
 </div>
@@ -72,10 +68,13 @@
 
 <script>
 const PASSWORD = "Holapola";
-const GITHUB_TOKEN = "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"; // ← ide illeszd be a GitHub tokened
 const REPO = "galaczi-hub/apartmanok";
 const FILE_PATH = "status.json";
 const BRANCH = "main";
+
+let GITHUB_TOKEN = '';
+let currentStatus = {};
+let fileSha = '';
 
 const apts = [
   { id: "apt1", name: "Vanili Santa Pola", emoji: "⚓" },
@@ -87,18 +86,20 @@ const apts = [
   { id: "apt7", name: "Alicante Big Holiday", emoji: "🏔️" },
 ];
 
-let currentStatus = {};
-let fileSha = '';
-
 function login() {
   const pw = document.getElementById('pwInput').value;
-  if (pw === PASSWORD) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminScreen').style.display = 'block';
-    loadStatus();
-  } else {
-    document.getElementById('loginError').style.display = 'block';
+  const token = document.getElementById('tokenInput').value.trim();
+  const err = document.getElementById('loginError');
+  if (pw !== PASSWORD) {
+    err.textContent = 'Hibás jelszó'; err.style.display = 'block'; return;
   }
+  if (!token.startsWith('ghp_')) {
+    err.textContent = 'Érvénytelen token (ghp_-vel kell kezdődnie)'; err.style.display = 'block'; return;
+  }
+  GITHUB_TOKEN = token;
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminScreen').style.display = 'block';
+  loadStatus();
 }
 
 async function loadStatus() {
@@ -147,12 +148,10 @@ async function saveStatus() {
   const btn = document.getElementById('saveBtn');
   btn.disabled = true;
   btn.textContent = 'Mentés folyamatban...';
-
   const content = btoa(JSON.stringify(currentStatus, null, 2));
   try {
     const body = { message: 'Státusz frissítve', content, branch: BRANCH };
     if (fileSha) body.sha = fileSha;
-
     const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
       method: 'PUT',
       headers: {
@@ -162,18 +161,17 @@ async function saveStatus() {
       },
       body: JSON.stringify(body)
     });
-
     if (res.ok) {
       const data = await res.json();
       fileSha = data.content.sha;
       showToast('✅ Sikeresen mentve!');
     } else {
-      showToast('❌ Hiba történt, próbáld újra');
+      const err = await res.json();
+      showToast('❌ Hiba: ' + (err.message || 'ismeretlen'));
     }
   } catch(e) {
     showToast('❌ Kapcsolati hiba');
   }
-
   btn.disabled = false;
   btn.textContent = '💾 Mentés és közzététel';
 }
