@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foglalás</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f7f6f3; color: #1a1a1a; min-height: 100vh;
+}
+
+.back { padding: 16px 20px; }
+.back a { font-size: 14px; color: #888; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.back a:hover { color: #1a1a1a; }
+
+.page-title { text-align: center; padding: 10px 20px 24px; }
+.page-title h1 { font-size: 22px; font-weight: 700; }
+.page-title p { font-size: 14px; color: #888; margin-top: 4px; }
+
+.container { max-width: 560px; margin: 0 auto; padding: 0 16px 60px; }
+
+.card {
+  background: #fff; border-radius: 16px; border: 1px solid #ece9e2;
+  padding: 20px; margin-bottom: 14px;
+}
+.card h2 { font-size: 15px; font-weight: 700; margin-bottom: 16px; color: #1a1a1a; }
+
+/* CALENDAR */
+.cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-title { font-size: 15px; font-weight: 600; }
+.cal-nav { background: none; border: 1px solid #ddd; border-radius: 8px; width: 32px; height: 32px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.cal-nav:hover { background: #f7f6f3; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-day-name { text-align: center; font-size: 11px; color: #aaa; font-weight: 600; padding: 4px 0; text-transform: uppercase; }
+.cal-day {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 13px; border-radius: 8px; cursor: pointer; transition: all 0.1s;
+  border: none; background: none;
+}
+.cal-day:hover:not(.disabled):not(.empty) { background: #f0f0f0; }
+.cal-day.empty { cursor: default; }
+.cal-day.disabled { color: #ccc; cursor: not-allowed; }
+.cal-day.start { background: #1a1a1a; color: #fff; border-radius: 8px 0 0 8px; }
+.cal-day.end { background: #1a1a1a; color: #fff; border-radius: 0 8px 8px 0; }
+.cal-day.start.end { border-radius: 8px; }
+.cal-day.inrange { background: rgba(26,26,26,0.1); border-radius: 0; }
+.cal-day.today { font-weight: 700; }
+
+.date-summary { display: flex; gap: 10px; margin-top: 14px; }
+.date-box { flex: 1; background: #f7f6f3; border-radius: 10px; padding: 10px 12px; }
+.date-box label { font-size: 10px; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
+.date-box span { font-size: 14px; font-weight: 600; }
+.nights-box { background: #1a1a1a; color: #fff; border-radius: 10px; padding: 10px 12px; text-align: center; min-width: 70px; }
+.nights-box label { font-size: 10px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
+.nights-box span { font-size: 18px; font-weight: 700; }
+
+/* FORM */
+.form-group { margin-bottom: 14px; }
+.form-group label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; font-weight: 500; }
+.form-group input, .form-group select {
+  width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 10px;
+  font-size: 15px; outline: none; background: #fff; color: #1a1a1a;
+}
+.form-group input:focus, .form-group select:focus { border-color: #1a1a1a; }
+
+/* CHECKBOXES */
+.check-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+.check-row input[type=checkbox] { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; cursor: pointer; accent-color: #1a1a1a; }
+.check-row label { font-size: 13px; color: #444; line-height: 1.5; cursor: pointer; }
+.check-row a { color: #1a1a1a; font-weight: 600; text-decoration: underline; cursor: pointer; }
+
+/* SUBMIT */
+.submit-btn {
+  width: 100%; padding: 16px; background: #1a1a1a; color: #fff;
+  border: none; border-radius: 12px; font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s; margin-top: 6px;
+}
+.submit-btn:hover { background: #333; }
+.submit-btn:disabled { background: #999; cursor: not-allowed; }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; align-items: flex-end; justify-content: center; padding: 0; }
+.modal-overlay.open { display: flex; }
+@media (min-width: 640px) { .modal-overlay { align-items: center; padding: 20px; } }
+.modal-box {
+  background: #fff; border-radius: 20px 20px 0 0; width: 100%;
+  max-height: 85vh; overflow-y: auto; padding: 24px 20px 40px;
+}
+@media (min-width: 640px) { .modal-box { border-radius: 16px; max-width: 560px; } }
+.modal-drag { width: 36px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 20px; }
+.modal-box h2 { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+.modal-box p, .modal-box li { font-size: 13px; color: #444; line-height: 1.8; margin-bottom: 8px; }
+.modal-box h3 { font-size: 14px; font-weight: 700; margin: 16px 0 6px; }
+.modal-box ul { padding-left: 20px; }
+.modal-close { display: block; width: 100%; margin-top: 20px; padding: 13px; background: #1a1a1a; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; }
+
+/* SUCCESS */
+.success-screen { display: none; text-align: center; padding: 60px 20px; }
+.success-screen .icon { font-size: 56px; margin-bottom: 16px; }
+.success-screen h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.success-screen p { font-size: 14px; color: #888; }
+
+/* TRANSLATE */
+.translate-bar { text-align: center; padding: 8px; background: #fff; border-bottom: 1px solid #ece9e2; }
+#google_translate_element { display: inline-block; }
+.goog-te-gadget { font-size: 12px !important; }
+.goog-te-gadget .goog-te-combo { padding: 4px 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="translate-bar">
+  <div id="google_translate_element"></div>
+</div>
+
+<div class="back"><a href="javascript:history.back()">← Vissza</a></div>
+
+<div class="page-title">
+  <h1 id="apt-name">Foglalás</h1>
+  <p>Válaszd ki az érkezés és távozás dátumát</p>
+</div>
+
+<div class="container" id="mainForm">
+
+  <!-- CALENDAR -->
+  <div class="card">
+    <h2>📅 Dátum kiválasztása</h2>
+    <div class="cal-header">
+      <button class="cal-nav" onclick="prevMonth()">‹</button>
+      <span class="cal-title" id="calTitle"></span>
+      <button class="cal-nav" onclick="nextMonth()">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="date-summary">
+      <div class="date-box">
+        <label>Érkezés</label>
+        <span id="startLabel">—</span>
+      </div>
+      <div class="date-box">
+        <label>Távozás</label>
+        <span id="endLabel">—</span>
+      </div>
+      <div class="nights-box">
+        <label>Éjszaka</label>
+        <span id="nightsLabel">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSONAL DATA -->
+  <div class="card">
+    <h2>👤 Személyes adatok</h2>
+    <div class="form-group">
+      <label>Teljes név *</label>
+      <input type="text" id="guestName" placeholder="Kovács János">
+    </div>
+    <div class="form-group">
+      <label>Email cím *</label>
+      <input type="email" id="guestEmail" placeholder="pelda@email.com">
+    </div>
+    <div class="form-group">
+      <label>Telefonszám *</label>
+      <input type="tel" id="guestPhone" placeholder="+36 30 123 4567">
+    </div>
+    <div class="form-group">
+      <label>Utazók száma *</label>
+      <select id="guestCount">
+        <option value="">Válassz...</option>
+        <option>1 fő</option>
+        <option>2 fő</option>
+        <option>3 fő</option>
+        <option>4 fő</option>
+        <option>5 fő</option>
+        <option>6 fő</option>
+        <option>7 fő</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Megjegyzés (opcionális)</label>
+      <input type="text" id="guestNote" placeholder="Különleges kérések, kérdések...">
+    </div>
+  </div>
+
+  <!-- CHECKBOXES -->
+  <div class="card">
+    <h2>📋 Feltételek elfogadása</h2>
+    <div class="check-row">
+      <input type="checkbox" id="chkAszf">
+      <label for="chkAszf">Elolvastam és elfogadom az <a onclick="openModal('aszf')">Általános Szerződési Feltételeket</a></label>
+    </div>
+    <div class="check-row">
+      <input type="checkbox" id="chkHazirend">
+      <label for="chkHazirend">Elolvastam és elfogadom a <a onclick="openModal('hazirend')">Házirend</a>et</label>
+    </div>
+    <div class="check-row">
+      <input type="checkbox" id="chkAdatvedelm">
+      <label for="chkAdatvedelm">Elolvastam és elfogadom az <a onclick="openModal('adatvedelem')">Adatvédelmi Tájékoztatót</a></label>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Foglalási kérelem elküldése →</button>
+  </div>
+
+</div>
+
+<div class="success-screen" id="successScreen">
+  <div class="icon">✅</div>
+  <h2>Köszönjük a foglalást!</h2>
+  <p>Hamarosan felvesszük veled a kapcsolatot a megadott email címen vagy telefonszámon.</p>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal">
+  <div class="modal-box">
+    <div class="modal-drag"></div>
+    <h2 id="modalTitle"></h2>
+    <div id="modalContent"></div>
+    <button class="modal-close" onclick="closeModal()">Bezárás</button>
+  </div>
+</div>
+
+<!-- HIDDEN FORMSPREE FORM -->
+<form id="formspreeForm" action="https://formspree.io/f/mojgaqqa" method="POST" style="display:none">
+  <input type="hidden" name="apartman" id="f_apartman">
+  <input type="hidden" name="erkezes" id="f_erkezes">
+  <input type="hidden" name="tavozas" id="f_tavozas">
+  <input type="hidden" name="ejszakak" id="f_ejszakak">
+  <input type="hidden" name="nev" id="f_nev">
+  <input type="hidden" name="email" id="f_email">
+  <input type="hidden" name="telefon" id="f_telefon">
+  <input type="hidden" name="utazok" id="f_utazok">
+  <input type="hidden" name="megjegyzes" id="f_megjegyzes">
+  <input type="hidden" name="_subject" id="f_subject">
+  <input type="hidden" name="_cc" value="galaczi.usa@gmail.com">
+  <input type="hidden" name="_next" value="sikeres">
+</form>
+
+<script>
+// Get apartment name from URL param
+const params = new URLSearchParams(window.location.search);
+const aptName = params.get('apt') || 'Apartman';
+document.getElementById('apt-name').textContent = aptName + ' — Foglalás';
+document.getElementById('f_apartman').value = aptName;
+
+// CALENDAR
+let today = new Date(); today.setHours(0,0,0,0);
+let viewYear = today.getFullYear();
+let viewMonth = today.getMonth();
+let startDate = null, endDate = null, selecting = false;
+
+const MONTHS = ['Január','Február','Március','Április','Május','Június','Július','Augusztus','Szeptember','Október','November','December'];
+const DAYS = ['H','K','Sze','Cs','P','Szo','V'];
+
+function renderCalendar() {
+  const title = document.getElementById('calTitle');
+  title.textContent = MONTHS[viewMonth] + ' ' + viewYear;
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  DAYS.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-day-name'; el.textContent = d; grid.appendChild(el);
+  });
+  const first = new Date(viewYear, viewMonth, 1);
+  let startDow = first.getDay(); // 0=Sun
+  startDow = startDow === 0 ? 6 : startDow - 1; // Mon=0
+  for (let i = 0; i < startDow; i++) {
+    const el = document.createElement('button'); el.className = 'cal-day empty'; grid.appendChild(el);
+  }
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(viewYear, viewMonth, d);
+    const el = document.createElement('button');
+    el.className = 'cal-day';
+    el.textContent = d;
+    if (date < today) { el.classList.add('disabled'); }
+    else {
+      if (date.toDateString() === today.toDateString()) el.classList.add('today');
+      if (startDate && date.toDateString() === startDate.toDateString()) el.classList.add('start');
+      if (endDate && date.toDateString() === endDate.toDateString()) el.classList.add('end');
+      if (startDate && endDate && date > startDate && date < endDate) el.classList.add('inrange');
+      el.onclick = () => selectDate(date);
+    }
+    grid.appendChild(el);
+  }
+  updateSummary();
+}
+
+function selectDate(date) {
+  if (!startDate || (startDate && endDate)) {
+    startDate = date; endDate = null;
+  } else {
+    if (date <= startDate) { startDate = date; endDate = null; }
+    else { endDate = date; }
+  }
+  renderCalendar();
+}
+
+function updateSummary() {
+  const fmt = d => d ? `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}` : '—';
+  document.getElementById('startLabel').textContent = fmt(startDate);
+  document.getElementById('endLabel').textContent = fmt(endDate);
+  if (startDate && endDate) {
+    const nights = Math.round((endDate - startDate) / 86400000);
+    document.getElementById('nightsLabel').textContent = nights;
+  } else {
+    document.getElementById('nightsLabel').textContent = '—';
+  }
+}
+
+function prevMonth() { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } renderCalendar(); }
+function nextMonth() { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } renderCalendar(); }
+
+// MODAL CONTENT
+const CONTENT = {
+  aszf: {
+    title: 'Általános Szerződési Feltételek',
+    html: `
+      <p>Jelen Általános Szerződési Feltételek (továbbiakban: ÁSZF) szabályozzák a magánszemély szállásdó (<strong>Fodor Amanda</strong>, székhely: [cím]) és a Vendég között létrejövő szállásbérleti jogviszonyt.</p>
+      <h3>1. A foglalás menete</h3>
+      <p>A Vendég a foglalási kérelem elküldésével ajánlatot tesz a szálláshely igénybevételére. A foglalás a Szállásdó visszaigazolásával válik érvényessé.</p>
+      <h3>2. Fizetési feltételek</h3>
+      <p>A szállás díját a Szállásdó által meghatározott határidőig és módon kell megfizetni. Az árak az aktuális megállapodás szerint kerülnek meghatározásra.</p>
+      <h3>3. Lemondási feltételek</h3>
+      <ul>
+        <li>Az érkezés előtt 30 nappal: teljes visszatérítés</li>
+        <li>Az érkezés előtt 14 nappal: 50% visszatérítés</li>
+        <li>Az érkezés előtt 7 napon belül: nem jár visszatérítés</li>
+      </ul>
+      <h3>4. A Vendég kötelezettségei</h3>
+      <p>A Vendég köteles a szálláshelyet rendeltetésszerűen használni, a házirendet betartani, és a szálláshelyen keletkezett kárt megtéríteni.</p>
+      <h3>5. Vegyes rendelkezések</h3>
+      <p>Jelen ÁSZF-re a magyar jog az irányadó. A felek vitás kérdéseiket elsősorban egyeztetés útján rendezik.</p>
+    `
+  },
+  hazirend: {
+    title: 'Házirend',
+    html: `
+      <h3>Bejelentkezés / kijelentkezés</h3>
+      <p>Bejelentkezés: 15:00 órától. Kijelentkezés: 11:00 óráig.</p>
+      <h3>Csend</h3>
+      <p>22:00–08:00 között kérjük a csendet betartani, tekintettel a szomszédokra.</p>
+      <h3>Dohányzás</h3>
+      <p>Az apartmanban tilos a dohányzás. Kizárólag a kijelölt külső területen engedélyezett.</p>
+      <h3>Háziállatok</h3>
+      <p>Háziállatot csak előzetes egyeztetés és engedély alapján lehet behozni.</p>
+      <h3>Vendégek száma</h3>
+      <p>Az apartmanban csak a bejelentkezett vendégek tartózkodhatnak. Látogatók fogadása előzetes egyeztetést igényel.</p>
+      <h3>Takarítás és rend</h3>
+      <p>Kérjük, az apartmant a kijelentkezéskor a bejelentkezéskori állapotban hagyják. A szemetet a kijelölt helyre kell elhelyezni.</p>
+      <h3>Károkozás</h3>
+      <p>A Vendég felelős az általa okozott károkért. Kérjük, észlelt hibát azonnal jelezze.</p>
+    `
+  },
+  adatvedelem: {
+    title: 'Adatvédelmi Tájékoztató',
+    html: `
+      <p>Az adatkezelő: <strong>Fodor Amanda</strong> (magánszemély szállásdó), cím: [cím].</p>
+      <h3>Kezelt adatok</h3>
+      <ul>
+        <li>Teljes név</li>
+        <li>Email cím</li>
+        <li>Telefonszám</li>
+        <li>Tartózkodás dátuma</li>
+        <li>Utazók száma</li>
+      </ul>
+      <h3>Az adatkezelés célja</h3>
+      <p>A foglalás lebonyolítása, a szállásszolgáltatás nyújtása és a kapcsolattartás.</p>
+      <h3>Az adatkezelés jogalapja</h3>
+      <p>A Vendég hozzájárulása (GDPR 6. cikk (1) bekezdés a) pont).</p>
+      <h3>Adatmegőrzési idő</h3>
+      <p>Az adatokat a foglalás teljesítésétől számított 5 évig őrizzük meg, a számviteli előírásoknak megfelelően.</p>
+      <h3>Az érintett jogai</h3>
+      <p>Hozzáférés, helyesbítés, törlés, adathordozhatóság joga. Jogorvoslat: Nemzeti Adatvédelmi és Információszabadság Hatóság (naih.hu).</p>
+      <h3>Adattovábbítás</h3>
+      <p>Az adatokat harmadik félnek nem adjuk át, kivéve jogszabályi kötelezettség esetén.</p>
+    `
+  }
+};
+
+function openModal(type) {
+  const c = CONTENT[type];
+  document.getElementById('modalTitle').textContent = c.title;
+  document.getElementById('modalContent').innerHTML = c.html;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// FORM SUBMIT
+async function submitForm() {
+  if (!startDate || !endDate) { alert('Kérjük válaszd ki az érkezés és távozás dátumát!'); return; }
+  if (!document.getElementById('guestName').value.trim()) { alert('Kérjük add meg a nevedet!'); return; }
+  if (!document.getElementById('guestEmail').value.trim()) { alert('Kérjük add meg az email címedet!'); return; }
+  if (!document.getElementById('guestPhone').value.trim()) { alert('Kérjük add meg a telefonszámodat!'); return; }
+  if (!document.getElementById('guestCount').value) { alert('Kérjük add meg az utazók számát!'); return; }
+  if (!document.getElementById('chkAszf').checked) { alert('Kérjük fogadd el az ÁSZF feltételeit!'); return; }
+  if (!document.getElementById('chkHazirend').checked) { alert('Kérjük fogadd el a Házirendet!'); return; }
+  if (!document.getElementById('chkAdatvedelm').checked) { alert('Kérjük fogadd el az Adatvédelmi Tájékoztatót!'); return; }
+
+  const fmt = d => `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  const nights = Math.round((endDate - startDate) / 86400000);
+
+  document.getElementById('f_erkezes').value = fmt(startDate);
+  document.getElementById('f_tavozas').value = fmt(endDate);
+  document.getElementById('f_ejszakak').value = nights + ' éjszaka';
+  document.getElementById('f_nev').value = document.getElementById('guestName').value;
+  document.getElementById('f_email').value = document.getElementById('guestEmail').value;
+  document.getElementById('f_telefon').value = document.getElementById('guestPhone').value;
+  document.getElementById('f_utazok').value = document.getElementById('guestCount').value;
+  document.getElementById('f_megjegyzes').value = document.getElementById('guestNote').value;
+  document.getElementById('f_subject').value = '🏡 Új foglalás: ' + aptName + ' — ' + fmt(startDate) + ' → ' + fmt(endDate);
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Küldés folyamatban...';
+
+  const form = document.getElementById('formspreeForm');
+  const data = new FormData(form);
+  try {
+    const res = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+    if (res.ok) {
+      document.getElementById('mainForm').style.display = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    } else {
+      alert('Hiba történt. Kérjük próbáld újra vagy írj emailt!');
+      btn.disabled = false; btn.textContent = 'Foglalási kérelem elküldése →';
+    }
+  } catch(e) {
+    alert('Kapcsolati hiba. Kérjük próbáld újra!');
+    btn.disabled = false; btn.textContent = 'Foglalási kérelem elküldése →';
+  }
+}
+
+document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+
+renderCalendar();
+</script>
+
+<!-- Google Translate -->
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'hu',
+    includedLanguages: 'hu,en,es',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+</html>
