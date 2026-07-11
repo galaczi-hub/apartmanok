@@ -232,6 +232,7 @@ body {
   <input type="hidden" name="utazok" id="f_utazok">
   <input type="hidden" name="megjegyzes" id="f_megjegyzes">
   <input type="hidden" name="_subject" id="f_subject">
+  <input type="hidden" name="elfogadott_feltetelek" id="f_feltetelek">
   <input type="hidden" name="_cc" value="galaczi.usa@gmail.com">
   <input type="hidden" name="_next" value="sikeres">
 </form>
@@ -417,6 +418,11 @@ async function submitForm() {
   document.getElementById('f_utazok').value = document.getElementById('guestCount').value;
   document.getElementById('f_megjegyzes').value = document.getElementById('guestNote').value;
   document.getElementById('f_subject').value = '🏡 Új foglalás: ' + aptName + ' — ' + fmt(startDate) + ' → ' + fmt(endDate);
+  document.getElementById('f_feltetelek').value = 
+    '✅ ÁSZF elfogadva: IGEN | ' +
+    '✅ Házirend elfogadva: IGEN | ' +
+    '✅ Adatvédelmi Tájékoztató elfogadva: IGEN | ' +
+    'Időpont: ' + new Date().toLocaleString('hu-HU');
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true; btn.textContent = 'Küldés folyamatban...';
