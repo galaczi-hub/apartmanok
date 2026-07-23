@@ -1,9 +1,9 @@
 {
   "apt1": false,
-  "apt2": false,
-  "apt3": false,
+  "apt2": true,
+  "apt3": true,
   "apt4": true,
-  "apt5": false,
-  "apt6": false,
-  "apt7": false
+  "apt5": true,
+  "apt6": true,
+  "apt7": true
 }
