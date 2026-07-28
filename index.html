@@ -11,17 +11,21 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     min-height: 100vh;
-    background: url('naplemente.jpg') center/cover no-repeat fixed;
+    background: #0a1628;
   }
 
-  /* Dark overlay for readability */
-  body::before {
-    content: '';
+  /* Fixed background - works on mobile too */
+  .bg-fixed {
     position: fixed;
     inset: 0;
+    background: url('naplemente.jpg') center/cover no-repeat;
+    z-index: -1;
+  }
+  .bg-fixed::after {
+    content: '';
+    position: absolute;
+    inset: 0;
     background: rgba(0, 0, 0, 0.25);
-    pointer-events: none;
-    z-index: 0;
   }
 
   header {
@@ -192,6 +196,8 @@
 </head>
 <body>
 
+<div class="bg-fixed"></div>
+
 <header>
   <h1> Apartments</h1>
   <p>Elérhető apartmanjaink</p>
@@ -253,6 +259,11 @@ const apts = [
     desc: "Ahol a luxus, a tér és a panoráma találkozik — Alicante szívében.", long: "Lépj be az Alicante Big Holiday apartmanba, ahol a modern elegancia és az otthon melege tökéletes összhangot alkot. A teljeskörűen felújított apartman prémium minőségű berendezésével a luxus érzetét nyújtja minden vendég számára.",
     persons: "7 fő", size: "100 m²", price: "120 €/éjtől", type: "3 hálószoba",
     page: "apt-7.html" },
+  { id: "apt8", name: "Roof Top Relax", emoji: "", color: "rgba(187, 247, 208, 0.6)", img: "rooftop.jpg",
+    desc: "A Gran Alacant szívében, a Green Terrace Home ikertestvére — tetőterasz, medence, mediterrán nyugalom.",
+    long: "A Green Terrace Home közvetlen szomszédságában lévő Roof Top Relax apartman mindazt nyújtja, amit ikerpárja, kiegészülve egy lenyűgöző tetőterasszal. Közösségi medence, saját parkoló, teljesen felszerelt lakás Gran Alacant nyugodt negyedében.",
+    persons: "4 fő", size: "75 m² + tetőterasz", price: "100 €/éjtől", type: "2 hálószoba, 2 fürdőszoba",
+    page: "apt-8.html" },
 
 ];
 
