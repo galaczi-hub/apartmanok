@@ -244,6 +244,22 @@ const aptName = params.get('apt') || 'Apartman';
 document.getElementById('apt-name').textContent = aptName + ' — Foglalás';
 document.getElementById('f_apartman').value = aptName;
 
+// Load blocked dates from status.json
+let blockedDates = [];
+const REPO_STATUS = 'https://raw.githubusercontent.com/galaczi-hub/apartmanok/main/status.json?t=' + Date.now();
+const APT_ID_MAP = {
+  'Vanili Santa Pola': 'apt1', 'Casa del Sol': 'apt2', 'Avenida Argentina': 'apt3',
+  'Mecset apartman': 'apt4', 'Green Terrace Home': 'apt5', 'Vanili Serra Grossa': 'apt6',
+  'Alicante Big Holiday': 'apt7', 'Roof Top Relax': 'apt8'
+};
+fetch(REPO_STATUS).then(r => r.json()).then(data => {
+  const aptId = APT_ID_MAP[aptName];
+  if (aptId && data[aptId] && data[aptId].blocked) {
+    blockedDates = data[aptId].blocked;
+    renderCalendar();
+  }
+}).catch(() => {});
+
 // CALENDAR
 let today = new Date(); today.setHours(0,0,0,0);
 let viewYear = today.getFullYear();
@@ -276,11 +292,21 @@ function renderCalendar() {
     el.textContent = d;
     if (date < today) { el.classList.add('disabled'); }
     else {
+      const dateStr = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
+      const isBlocked = blockedDates.includes(dateStr);
       if (date.toDateString() === today.toDateString()) el.classList.add('today');
-      if (startDate && date.toDateString() === startDate.toDateString()) el.classList.add('start');
-      if (endDate && date.toDateString() === endDate.toDateString()) el.classList.add('end');
-      if (startDate && endDate && date > startDate && date < endDate) el.classList.add('inrange');
-      el.onclick = () => selectDate(date);
+      if (isBlocked) {
+        el.classList.add('disabled');
+        el.style.background = '#fee2e2';
+        el.style.color = '#dc2626';
+        el.style.cursor = 'not-allowed';
+        el.title = 'Foglalt';
+      } else {
+        if (startDate && date.toDateString() === startDate.toDateString()) el.classList.add('start');
+        if (endDate && date.toDateString() === endDate.toDateString()) el.classList.add('end');
+        if (startDate && endDate && date > startDate && date < endDate) el.classList.add('inrange');
+        el.onclick = () => selectDate(date);
+      }
     }
     grid.appendChild(el);
   }
