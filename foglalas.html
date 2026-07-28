@@ -244,22 +244,6 @@ const aptName = params.get('apt') || 'Apartman';
 document.getElementById('apt-name').textContent = aptName + ' — Foglalás';
 document.getElementById('f_apartman').value = aptName;
 
-// Load blocked dates from status.json
-let blockedDates = [];
-const REPO_STATUS = 'https://raw.githubusercontent.com/galaczi-hub/apartmanok/main/status.json?t=' + Date.now();
-const APT_ID_MAP = {
-  'Vanili Santa Pola': 'apt1', 'Casa del Sol': 'apt2', 'Avenida Argentina': 'apt3',
-  'Mecset apartman': 'apt4', 'Green Terrace Home': 'apt5', 'Vanili Serra Grossa': 'apt6',
-  'Alicante Big Holiday': 'apt7', 'Roof Top Relax': 'apt8'
-};
-fetch(REPO_STATUS).then(r => r.json()).then(data => {
-  const aptId = APT_ID_MAP[aptName];
-  if (aptId && data[aptId] && data[aptId].blocked) {
-    blockedDates = data[aptId].blocked;
-    renderCalendar();
-  }
-}).catch(() => {});
-
 // CALENDAR
 let today = new Date(); today.setHours(0,0,0,0);
 let viewYear = today.getFullYear();
@@ -292,21 +276,11 @@ function renderCalendar() {
     el.textContent = d;
     if (date < today) { el.classList.add('disabled'); }
     else {
-      const dateStr = date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
-      const isBlocked = blockedDates.includes(dateStr);
       if (date.toDateString() === today.toDateString()) el.classList.add('today');
-      if (isBlocked) {
-        el.classList.add('disabled');
-        el.style.background = '#fee2e2';
-        el.style.color = '#dc2626';
-        el.style.cursor = 'not-allowed';
-        el.title = 'Foglalt';
-      } else {
-        if (startDate && date.toDateString() === startDate.toDateString()) el.classList.add('start');
-        if (endDate && date.toDateString() === endDate.toDateString()) el.classList.add('end');
-        if (startDate && endDate && date > startDate && date < endDate) el.classList.add('inrange');
-        el.onclick = () => selectDate(date);
-      }
+      if (startDate && date.toDateString() === startDate.toDateString()) el.classList.add('start');
+      if (endDate && date.toDateString() === endDate.toDateString()) el.classList.add('end');
+      if (startDate && endDate && date > startDate && date < endDate) el.classList.add('inrange');
+      el.onclick = () => selectDate(date);
     }
     grid.appendChild(el);
   }
@@ -343,25 +317,21 @@ const CONTENT = {
   aszf: {
     title: 'Általános Szerződési Feltételek',
     html: `
-      <p>Jelen Általános Szerződési Feltételek (továbbiakban: ÁSZF) szabályozzák a magánszemély szállásdó (<strong>Fodor István Attila</strong>, székhely: [cím]) és a Vendég között létrejövő szállásbérleti jogviszonyt.</p>
+      <p>Jelen Általános Szerződési Feltételek (továbbiakban: ÁSZF) szabályozzák a magánszemély szállásdó (<strong>Fodor Amanda</strong>, székhely: [cím]) és a Vendég között létrejövő szállásbérleti jogviszonyt.</p>
       <h3>1. A foglalás menete</h3>
       <p>A Vendég a foglalási kérelem elküldésével ajánlatot tesz a szálláshely igénybevételére. A foglalás a Szállásdó visszaigazolásával válik érvényessé.</p>
       <h3>2. Fizetési feltételek</h3>
-      <p>A szállás díját a Szállásdó által meghatározott határidőig és módon kell megfizetni. Az árak az aktuális megállapodás szerint kerülnek meghatározásra.</p
-      <h3>3. Fizetési feltételek</h3>
-      <ul
-        <li>Foglaláskor a szállásdíj 20%-a foglalási biztosítékként fizetendő.</li>
-        <li>Az érkezés előtti 15. napig esedékes a szállásdíj fennmaradó összege. </li>
-      </ul>
+      <p>A szállás díját a Szállásdó által meghatározott határidőig és módon kell megfizetni. Az árak az aktuális megállapodás szerint kerülnek meghatározásra.</p>
       <h3>3. Lemondási feltételek</h3>
-       <ul
-        <li>Az érkezés előtti 14. napig 100%-os visszatérítés. </li>
-        <li>Az érkezés előtti 14. naptól nem jár visszatérítés. </li>
+      <ul>
+        <li>Az érkezés előtt 30 nappal: teljes visszatérítés</li>
+        <li>Az érkezés előtt 14 nappal: 50% visszatérítés</li>
+        <li>Az érkezés előtt 7 napon belül: nem jár visszatérítés</li>
       </ul>
       <h3>4. A Vendég kötelezettségei</h3>
       <p>A Vendég köteles a szálláshelyet rendeltetésszerűen használni, a házirendet betartani, és a szálláshelyen keletkezett kárt megtéríteni.</p>
       <h3>5. Vegyes rendelkezések</h3>
-      <p>Jelen ÁSZF-re a spanyol jog az irányadó. A felek vitás kérdéseiket elsősorban egyeztetés útján rendezik.</p>
+      <p>Jelen ÁSZF-re a magyar jog az irányadó. A felek vitás kérdéseiket elsősorban egyeztetés útján rendezik.</p>
     `
   },
   hazirend: {
