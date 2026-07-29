@@ -340,82 +340,73 @@ function nextMonth() { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYea
 
 // MODAL CONTENT
 const OWNERS = {
-  'Vanili Santa Pola': { name: 'Sőrés Vajk', address: 'Santa Pola, Pasaje Granada 2, Planta 1, Puerta 3' },
-  'Casa del Sol': { name: 'Taligás Máté', address: 'Santa Pola, Calle Venezuela 6, Planta 1, Puerta C' },
-  'Avenida Argentina': { name: 'Fodor Attila', address: 'Santa Pola, Av. Argentina 50, 2/D' },
-  'Mecset apartman': { name: 'Fodor Amanda', address: 'Santa Pola, Av. Santiago Bernabeu 43, Bloque 1, Planta 1' },
-  'Green Terrace Home': { name: 'Zöldi Szilvia', address: 'Gran Alacant, Av. de Polonia 82' },
-  'Vanili Serra Grossa': { name: 'Fodor Amanda', address: 'Alicante, Calle Dona Dolsa 6, 3/Izq' },
+  'Vanili Santa Pola':    { name: 'Sőrés Vajk',           address: 'Santa Pola, Pasaje Granada 2, Planta 1, Puerta 3' },
+  'Casa del Sol':         { name: 'Taligás Máté',          address: 'Santa Pola, Calle Venezuela 6, Planta 1, Puerta C' },
+  'Avenida Argentina':    { name: 'Fodor Attila',          address: 'Santa Pola, Av. Argentina 50, 2/D' },
+  'Mecset apartman':      { name: 'Fodor Amanda',          address: 'Santa Pola, Av. Santiago Bernabeu 43, Bloque 1, Planta 1' },
+  'Green Terrace Home':   { name: 'Zöldi Szilvia',         address: 'Gran Alacant, Av. de Polonia 82' },
+  'Vanili Serra Grossa':  { name: 'Fodor Amanda',          address: 'Alicante, Calle Dona Dolsa 6, 3/Izq' },
   'Alicante Big Holiday': { name: 'Boldizsár Liza Ildikó', address: 'Alicante, Gonzalo Mengual 8, Planta 6, Puerta A' },
-  'Roof Top Relax': { name: 'Miskolczi Zita', address: 'Gran Alacant, Avinguda de Polonia 158, Novamar V, Bloque 32, Nr 29' },
+  'Roof Top Relax':       { name: 'Miskolczi Zita',        address: 'Gran Alacant, Avinguda de Polonia 158, Novamar V, Bloque 32, Nr 29' },
 };
+
+function getAszfHtml() {
+  const o = OWNERS[aptName] || {};
+  return '<p>Jelen Általános Szerződési Feltételek (továbbiakban: ÁSZF) szabályozzák a magánszemély szállásdó (<strong>' + (o.name||'') + '</strong>, székhely: ' + (o.address||'') + ') és a Vendég között létrejövő szállásbérleti jogviszonyt.</p>' +
+    '<h3>1. A foglalás menete</h3>' +
+    '<p>A Vendég a foglalási kérelem elküldésével ajánlatot tesz a szálláshely igénybevételére. A foglalás a Szállásdó írásos visszaigazolásával válik érvényessé. A visszaigazolást követően a Vendég köteles az előleget az ott megjelölt határidőig megfizetni. Előleg hiányában a foglalás érvénytelennek tekinthető.</p>' +
+    '<h3>2. Fizetési feltételek</h3>' +
+    '<p><strong>Előleg:</strong> A foglalás megerősítésekor a teljes szállásdíj <strong>20%-át</strong> előlegként kell megfizetni, a Szállásdó által megküldött fizetési linken keresztül.</p>' +
+    '<p><strong>Fennmaradó összeg:</strong> A szállásdíj fennmaradó 80%-a legkésőbb az érkezés napján, bejelentkezéskor fizetendő.</p>' +
+    '<h3>3. Lemondási feltételek</h3>' +
+    '<ul>' +
+    '<li><strong>Az érkezés előtt több mint 14 nappal:</strong> A befizetett előleg teljes összege visszajár.</li>' +
+    '<li><strong>Az érkezés előtt 14 napon belül:</strong> Az előleg nem kerül visszatérítésre.</li>' +
+    '<li><strong>Módosítás:</strong> A foglalás dátumának módosítása kizárólag a Szállásdó előzetes írásos hozzájárulásával lehetséges.</li>' +
+    '</ul>' +
+    '<h3>4. A Vendég kötelezettségei</h3>' +
+    '<p>A Vendég köteles a szálláshelyet rendeltetésszerűen használni, a házirendet betartani, és a szálláshelyen általa okozott kárt megtéríteni.</p>' +
+    '<h3>5. A Szállásdó kötelezettségei</h3>' +
+    '<p>A Szállásdó köteles a visszaigazolt szálláshelyet a megbeszélt időpontban, tisztán és felszerelten átadni. Vis maior esetén a Szállásdó a befizetett összeget teljes egészében visszatéríti.</p>' +
+    '<h3>6. Vegyes rendelkezések</h3>' +
+    '<p>Jelen ÁSZF-re a spanyol jog az irányadó. A felek vitás kérdéseiket elsősorban egyeztetés útján rendezik. Jelen ÁSZF elfogadása a foglalási kérelem elküldésével egyidejűleg elektronikus úton történik.</p>';
+}
+
+function getAdatvedelemHtml() {
+  const o = OWNERS[aptName] || {};
+  return '<p>Az adatkezelő: <strong>' + (o.name||'') + '</strong> (magánszemély szállásdó), cím: ' + (o.address||'') + '.</p>' +
+    '<h3>Kezelt adatok</h3>' +
+    '<ul><li>Teljes név</li><li>Email cím</li><li>Telefonszám</li><li>Tartózkodás dátuma</li><li>Utazók száma</li></ul>' +
+    '<h3>Az adatkezelés célja</h3>' +
+    '<p>A foglalás lebonyolítása, a szállásszolgáltatás nyújtása és a kapcsolattartás.</p>' +
+    '<h3>Az adatkezelés jogalapja</h3>' +
+    '<p>A Vendég hozzájárulása (GDPR 6. cikk (1) bekezdés a) pont).</p>' +
+    '<h3>Adatmegőrzési idő</h3>' +
+    '<p>Az adatokat a foglalás teljesítésétől számított 5 évig őrizzük meg.</p>' +
+    '<h3>Az érintett jogai</h3>' +
+    '<p>Hozzáférés, helyesbítés, törlés, adathordozhatóság joga. Jogorvoslat: Nemzeti Adatvédelmi és Információszabadság Hatóság (naih.hu).</p>' +
+    '<h3>Adattovábbítás</h3>' +
+    '<p>Az adatokat harmadik félnek nem adjuk át, kivéve jogszabályi kötelezettség esetén.</p>';
+}
 
 const CONTENT = {
   aszf: {
     title: 'Általános Szerződési Feltételek',
-    get html() { const o = OWNERS[aptName] || {}; return `
-      <p>Jelen Általános Szerződési Feltételek (továbbiakban: ÁSZF) szabályozzák a magánszemély szállásdó (<strong>${o.name || ''}</strong>, székhely: ${o.address || ''}) és a Vendég között létrejövő szállásbérleti jogviszonyt.</p>
-      <h3>1. A foglalás menete</h3>
-      <p>A Vendég a foglalási kérelem elküldésével ajánlatot tesz a szálláshely igénybevételére. A foglalás a Szállásdó visszaigazolásával válik érvényessé.</p>
-      <h3>2. Fizetési feltételek</h3>
-      <p>A szállás díját a Szállásdó által meghatározott határidőig és módon kell megfizetni. Az árak az aktuális megállapodás szerint kerülnek meghatározásra.</p>
-      <h3>2. Fizetési feltételek</h3>
-      <ul>
-        <li>Foglaláskor a szállásdíj 20%-a foglalási biztosítékként fizetendő.</li>
-        <li>Az érkezés előtti 15. napig esedékes a szállásdíj fennmaradó összege. </li>
-      </ul>
-      <h3>3. Lemondási feltételek</h3>
-      <ul>
-        <li>Az érkezés előtti 14. napig 100%-os visszatérítés. </li>
-        <li>Az érkezés előtti 14. naptól nem jár visszatérítés. </li>
-      </ul>
-      <h3>4. A Vendég kötelezettségei</h3>
-      <p>A Vendég köteles a szálláshelyet rendeltetésszerűen használni, a házirendet betartani, és a szálláshelyen keletkezett kárt megtéríteni.</p>
-      <h3>5. Vegyes rendelkezések</h3>
-      <p>Jelen ÁSZF-re a spanyol jog az irányadó. A felek vitás kérdéseiket elsősorban egyeztetés útján rendezik.</p>
-    `; },
+    get html() { return getAszfHtml(); }
+  },
   hazirend: {
     title: 'Házirend',
-    html: `
-      <h3>Bejelentkezés / kijelentkezés</h3>
-      <p>Bejelentkezés: 15:00 órától. Kijelentkezés: 11:00 óráig.</p>
-      <h3>Csend</h3>
-      <p>22:00–08:00 között kérjük a csendet betartani, tekintettel a szomszédokra.</p>
-      <h3>Dohányzás</h3>
-      <p>Az apartmanban tilos a dohányzás. Kizárólag a kijelölt külső területen engedélyezett.</p>
-      <h3>Háziállatok</h3>
-      <p>Háziállatot csak előzetes egyeztetés és engedély alapján lehet behozni.</p>
-      <h3>Vendégek száma</h3>
-      <p>Az apartmanban csak a bejelentkezett vendégek tartózkodhatnak. Látogatók fogadása előzetes egyeztetést igényel.</p>
-      <h3>Takarítás és rend</h3>
-      <p>Kérjük, az apartmant a kijelentkezéskor a bejelentkezéskori állapotban hagyják. A szemetet a kijelölt helyre kell elhelyezni.</p>
-      <h3>Károkozás</h3>
-      <p>A Vendég felelős az általa okozott károkért. Kérjük, észlelt hibát azonnal jelezze.</p>
-    `
+    html: '<h3>Bejelentkezés / kijelentkezés</h3><p>Bejelentkezés: 15:00 órától. Kijelentkezés: 11:00 óráig.</p>' +
+      '<h3>Csend</h3><p>22:00–08:00 között kérjük a csendet betartani, tekintettel a szomszédokra.</p>' +
+      '<h3>Dohányzás</h3><p>Az apartmanban tilos a dohányzás. Kizárólag a kijelölt külső területen engedélyezett.</p>' +
+      '<h3>Háziállatok</h3><p>Háziállatot csak előzetes egyeztetés és engedély alapján lehet behozni.</p>' +
+      '<h3>Vendégek száma</h3><p>Az apartmanban csak a bejelentkezett vendégek tartózkodhatnak.</p>' +
+      '<h3>Takarítás és rend</h3><p>Kérjük, az apartmant a kijelentkezéskor a bejelentkezéskori állapotban hagyják.</p>' +
+      '<h3>Károkozás</h3><p>A Vendég felelős az általa okozott károkért. Kérjük, észlelt hibát azonnal jelezze.</p>'
   },
   adatvedelem: {
     title: 'Adatvédelmi Tájékoztató',
-    get html() { const o = OWNERS[aptName] || {}; return `
-      <p>Az adatkezelő: <strong>${o.name || ''}</strong> (magánszemély szállásdó), cím: ${o.address || ''}.</p>
-      <h3>Kezelt adatok</h3>
-      <ul>
-        <li>Teljes név</li>
-        <li>Email cím</li>
-        <li>Telefonszám</li>
-        <li>Tartózkodás dátuma</li>
-        <li>Utazók száma</li>
-      </ul>
-      <h3>Az adatkezelés célja</h3>
-      <p>A foglalás lebonyolítása, a szállásszolgáltatás nyújtása és a kapcsolattartás.</p>
-      <h3>Az adatkezelés jogalapja</h3>
-      <p>A Vendég hozzájárulása (GDPR 6. cikk (1) bekezdés a) pont).</p>
-      <h3>Adatmegőrzési idő</h3>
-      <p>Az adatokat a foglalás teljesítésétől számított 5 évig őrizzük meg, a számviteli előírásoknak megfelelően.</p>
-      <h3>Az érintett jogai</h3>
-      <p>Hozzáférés, helyesbítés, törlés, adathordozhatóság joga. Jogorvoslat: Nemzeti Adatvédelmi és Információszabadság Hatóság (naih.hu).</p>
-      <h3>Adattovábbítás</h3>
-      <p>Az adatokat harmadik félnek nem adjuk át, kivéve jogszabályi kötelezettség esetén.</p>
-    `
+    get html() { return getAdatvedelemHtml(); }
   }
 };
 
