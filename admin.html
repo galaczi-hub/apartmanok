@@ -8,377 +8,353 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f7f6f3; color: #1a1a1a; min-height: 100vh; }
 
-.login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; }
+/* LOGIN */
+#loginScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 16px; }
 .login-box { background: #fff; border-radius: 16px; border: 1px solid #ece9e2; padding: 32px 28px; width: 100%; max-width: 360px; text-align: center; }
 .login-box h1 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
-.login-box p { font-size: 13px; color: #888; margin-bottom: 24px; }
-.field-label { font-size: 12px; color: #aaa; text-align: left; margin-bottom: 4px; margin-top: 8px; }
-.login-box input { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; margin-bottom: 4px; }
+.login-box p { font-size: 13px; color: #888; margin-bottom: 20px; }
+.field-label { font-size: 12px; color: #aaa; text-align: left; margin-bottom: 4px; margin-top: 10px; }
+.login-box input { width: 100%; padding: 12px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; outline: none; }
 .login-box input:focus { border-color: #1a1a1a; }
-.login-btn { width: 100%; padding: 13px; background: #1a1a1a; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 12px; }
+.login-btn { width: 100%; padding: 13px; background: #1a1a1a; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 14px; }
 .login-btn:hover { background: #333; }
-.error { color: #c0392b; font-size: 13px; margin-top: 8px; display: none; }
+.err { color: #c0392b; font-size: 13px; margin-top: 8px; display: none; }
 
-.admin-screen { display: none; max-width: 600px; margin: 0 auto; padding: 20px 16px 60px; }
-header { text-align: center; margin-bottom: 24px; padding-top: 20px; }
-header h1 { font-size: 20px; font-weight: 600; letter-spacing: 1px; }
-header p { font-size: 13px; color: #888; margin-top: 4px; }
+/* ADMIN */
+#adminScreen { display: none; max-width: 580px; margin: 0 auto; padding: 24px 16px 60px; }
+h1.admin-title { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+p.admin-sub { font-size: 13px; color: #888; text-align: center; margin-bottom: 24px; }
 
+/* APT CARD */
 .apt-card { background: #fff; border-radius: 16px; border: 1px solid #ece9e2; margin-bottom: 12px; overflow: hidden; }
-.apt-header { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-.apt-header:hover { background: #fafafa; }
-.apt-info { display: flex; align-items: center; gap: 12px; }
-.apt-emoji { font-size: 24px; }
+.apt-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; cursor: pointer; user-select: none; }
+.apt-head:hover { background: #fafafa; }
+.apt-left { display: flex; align-items: center; gap: 12px; }
+.apt-emoji { font-size: 26px; }
 .apt-name { font-size: 15px; font-weight: 600; }
-.apt-meta { font-size: 12px; color: #888; margin-top: 2px; }
+.apt-info { font-size: 12px; color: #888; margin-top: 2px; }
 .apt-right { display: flex; align-items: center; gap: 12px; }
-.chevron { font-size: 12px; color: #aaa; transition: transform 0.2s; }
+.chevron { color: #bbb; font-size: 13px; transition: transform 0.2s; }
 .chevron.open { transform: rotate(180deg); }
 
+/* TOGGLE */
 .toggle { position: relative; width: 48px; height: 28px; flex-shrink: 0; }
 .toggle input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; inset: 0; background: #ddd; border-radius: 30px; cursor: pointer; transition: background 0.2s; }
-.slider:before { content: ''; position: absolute; width: 20px; height: 20px; left: 4px; top: 4px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.slider::before { content: ''; position: absolute; width: 20px; height: 20px; left: 4px; top: 4px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
 input:checked + .slider { background: #2ecc71; }
-input:checked + .slider:before { transform: translateX(20px); }
+input:checked + .slider::before { transform: translateX(20px); }
 
-.apt-body { display: none; border-top: 1px solid #f0f0f0; padding: 16px 18px; }
+/* CALENDAR BODY */
+.apt-body { display: none; border-top: 1px solid #f0f0f0; padding: 16px 18px 20px; }
 .apt-body.open { display: block; }
-
-/* CALENDAR */
-.cal-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.cal-month { font-size: 14px; font-weight: 600; }
-.cal-nav { background: none; border: 1px solid #ddd; border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
-.cal-nav:hover { background: #f7f6f3; }
-.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 12px; }
-.cal-day-name { text-align: center; font-size: 10px; color: #aaa; font-weight: 600; padding: 3px 0; }
-.cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 6px; cursor: pointer; border: none; background: none; transition: all 0.1s; }
-.cal-day:hover:not(.disabled):not(.empty) { background: #f0f0f0; }
-.cal-day.empty { cursor: default; }
-.cal-day.past { color: #ddd; cursor: not-allowed; }
-.cal-day.blocked { background: #fee2e2; color: #dc2626; border-radius: 6px; font-weight: 600; }
-.cal-day.sel-start { background: #1a1a1a; color: #fff; border-radius: 6px 0 0 6px; }
-.cal-day.sel-end { background: #1a1a1a; color: #fff; border-radius: 0 6px 6px 0; }
-.cal-day.sel-start.sel-end { border-radius: 6px; }
-.cal-day.sel-range { background: rgba(26,26,26,0.12); border-radius: 0; }
-.cal-day.today { font-weight: 700; }
-
 .cal-legend { display: flex; gap: 16px; font-size: 11px; color: #888; margin-bottom: 12px; }
-.legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
-
+.leg-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+.sel-info { font-size: 12px; color: #555; background: #f7f6f3; border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; text-align: center; }
+.cal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cal-month-label { font-size: 14px; font-weight: 600; }
+.cal-btn { background: none; border: 1px solid #ddd; border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.cal-btn:hover { background: #f7f6f3; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; margin-bottom: 12px; }
+.dn { text-align: center; font-size: 10px; color: #aaa; font-weight: 600; padding: 3px 0; }
+.day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 6px; cursor: pointer; border: none; background: none; }
+.day:hover:not(.past):not(.empty) { background: #f0f0f0; }
+.day.empty { cursor: default; pointer-events: none; }
+.day.past { color: #ccc; cursor: not-allowed; }
+.day.today { font-weight: 800; }
+.day.blocked { background: #fee2e2 !important; color: #dc2626 !important; font-weight: 600; }
+.day.sel-s { background: #1a1a1a !important; color: #fff !important; border-radius: 6px 0 0 6px; }
+.day.sel-e { background: #1a1a1a !important; color: #fff !important; border-radius: 0 6px 6px 0; }
+.day.sel-s.sel-e { border-radius: 6px !important; }
+.day.sel-r { background: rgba(26,26,26,0.1) !important; border-radius: 0; }
 .cal-actions { display: flex; gap: 8px; }
 .btn-block { flex: 1; padding: 10px; background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .btn-block:hover { background: #fecaca; }
-.btn-unblock { flex: 1; padding: 10px; background: #f7f6f3; color: #1a1a1a; border: 1px solid #ddd; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
-.btn-unblock:hover { background: #eee; }
-.sel-info { font-size: 12px; color: #888; text-align: center; margin-bottom: 10px; min-height: 18px; }
+.btn-free { flex: 1; padding: 10px; background: #f7f6f3; color: #1a1a1a; border: 1px solid #ddd; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-free:hover { background: #eee; }
 
-.save-btn { width: 100%; margin-top: 16px; padding: 15px; background: #1a1a1a; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
+.save-btn { width: 100%; margin-top: 20px; padding: 15px; background: #1a1a1a; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; }
 .save-btn:hover { background: #333; }
 .save-btn:disabled { background: #999; cursor: not-allowed; }
 
-.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; z-index: 999; }
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; }
 .toast.show { opacity: 1; }
 </style>
 </head>
 <body>
 
-<div class="login-screen" id="loginScreen">
+<div id="loginScreen">
   <div class="login-box">
     <h1>🏡 Admin belépés</h1>
     <p>Vanili Apartments kezelőfelület</p>
     <div class="field-label">Jelszó</div>
-    <input type="password" id="pwInput" placeholder="Jelszó" onkeydown="if(event.key==='Enter')document.getElementById('tokenInput').focus()">
+    <input type="password" id="pw" placeholder="Jelszó">
     <div class="field-label">GitHub Token</div>
-    <input type="password" id="tokenInput" placeholder="ghp_..." onkeydown="if(event.key==='Enter')login()">
-    <button class="login-btn" onclick="login()">Belépés</button>
-    <div class="error" id="loginError"></div>
+    <input type="password" id="tok" placeholder="ghp_...">
+    <button class="login-btn" onclick="doLogin()">Belépés</button>
+    <div class="err" id="loginErr"></div>
   </div>
 </div>
 
-<div class="admin-screen" id="adminScreen">
-  <header>
-    <h1>Vanili Apartments</h1>
-    <p>Elérhetőség és foglalt napok kezelése</p>
-  </header>
+<div id="adminScreen">
+  <h1 class="admin-title">Vanili Apartments</h1>
+  <p class="admin-sub">Elérhetőség és foglalt napok kezelése</p>
   <div id="aptList"></div>
-  <button class="save-btn" id="saveBtn" onclick="saveStatus()">💾 Mentés és közzététel</button>
+  <button class="save-btn" id="saveBtn" onclick="doSave()">💾 Mentés és közzététel</button>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const PASSWORD = "Holapola";
+const PW = "Holapola";
 const REPO = "galaczi-hub/apartmanok";
-const FILE_PATH = "status.json";
 const BRANCH = "main";
-let GITHUB_TOKEN = '';
-let currentStatus = {};
-let fileSha = '';
+const FILE = "status.json";
+let TOKEN = '';
+let STATUS = {};
+let SHA = '';
 
-const apts = [
-  { id: "apt1", name: "Vanili Santa Pola", emoji: "⚓" },
-  { id: "apt2", name: "Casa del Sol", emoji: "🌊" },
-  { id: "apt3", name: "Avenida Argentina", emoji: "🌅" },
-  { id: "apt4", name: "Mecset apartman", emoji: "🕌" },
-  { id: "apt5", name: "Green Terrace Home", emoji: "🌿" },
-  { id: "apt6", name: "Vanili Serra Grossa", emoji: "🏙️" },
-  { id: "apt7", name: "Alicante Big Holiday", emoji: "🏔️" },
-  { id: "apt8", name: "Roof Top Relax", emoji: "🌴" },
+const APTS = [
+  { id:"apt1", name:"Vanili Santa Pola",    emoji:"⚓" },
+  { id:"apt2", name:"Casa del Sol",          emoji:"🌊" },
+  { id:"apt3", name:"Avenida Argentina",     emoji:"🌅" },
+  { id:"apt4", name:"Mecset apartman",       emoji:"🕌" },
+  { id:"apt5", name:"Green Terrace Home",    emoji:"🌿" },
+  { id:"apt6", name:"Vanili Serra Grossa",   emoji:"🏙️" },
+  { id:"apt7", name:"Alicante Big Holiday",  emoji:"🏔️" },
+  { id:"apt8", name:"Roof Top Relax",        emoji:"🌴" },
 ];
 
-// Per-apt calendar state
-const calState = {};
-apts.forEach(a => {
-  calState[a.id] = { year: new Date().getFullYear(), month: new Date().getMonth(), selStart: null, selEnd: null };
+// Calendar state per apt
+const CAL = {};
+APTS.forEach(a => {
+  const now = new Date();
+  CAL[a.id] = { y: now.getFullYear(), m: now.getMonth(), s1: null, s2: null };
 });
 
-function login() {
-  const pw = document.getElementById('pwInput').value;
-  const token = document.getElementById('tokenInput').value.trim();
-  const err = document.getElementById('loginError');
-  if (pw !== PASSWORD) { err.textContent = 'Hibás jelszó'; err.style.display = 'block'; return; }
-  if (!token.startsWith('ghp_')) { err.textContent = 'Érvénytelen token'; err.style.display = 'block'; return; }
-  GITHUB_TOKEN = token;
+const MONTHS = ['Január','Február','Március','Április','Május','Június','Július','Augusztus','Szeptember','Október','November','December'];
+
+function fmt(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function today0() { const t = new Date(); t.setHours(0,0,0,0); return t; }
+
+// LOGIN
+function doLogin() {
+  const pw = document.getElementById('pw').value;
+  const tok = document.getElementById('tok').value.trim();
+  const err = document.getElementById('loginErr');
+  if (pw !== PW) { err.textContent='Hibás jelszó'; err.style.display='block'; return; }
+  if (!tok.startsWith('ghp_')) { err.textContent='Érvénytelen token'; err.style.display='block'; return; }
+  TOKEN = tok;
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminScreen').style.display = 'block';
-  loadStatus();
+  loadData();
 }
 
-async function loadStatus() {
+// LOAD
+async function loadData() {
   try {
-    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-      headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
+      headers: { 'Authorization': `token ${TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
     });
-    const data = await res.json();
-    fileSha = data.sha;
-    currentStatus = JSON.parse(atob(data.content));
-    // Migrate old format
-    apts.forEach(a => {
-      if (typeof currentStatus[a.id] === 'boolean') {
-        currentStatus[a.id] = { available: currentStatus[a.id], blocked: [] };
-      }
-      if (!currentStatus[a.id]) currentStatus[a.id] = { available: true, blocked: [] };
-      if (!currentStatus[a.id].blocked) currentStatus[a.id].blocked = [];
+    const d = await r.json();
+    SHA = d.sha;
+    STATUS = JSON.parse(atob(d.content));
+    // migrate old boolean format
+    APTS.forEach(a => {
+      if (typeof STATUS[a.id] === 'boolean') STATUS[a.id] = { available: STATUS[a.id], blocked: [] };
+      if (!STATUS[a.id]) STATUS[a.id] = { available: true, blocked: [] };
+      if (!STATUS[a.id].blocked) STATUS[a.id].blocked = [];
     });
   } catch(e) {
-    apts.forEach(a => currentStatus[a.id] = { available: true, blocked: [] });
+    APTS.forEach(a => STATUS[a.id] = { available: true, blocked: [] });
   }
-  renderAll();
+  buildUI();
 }
 
-function buildAptCard(a) {
-  const s = currentStatus[a.id];
-  const free = s.available;
-  const blockedCount = s.blocked.length;
-
-  const div = document.createElement('div');
-  div.className = 'apt-card';
-  div.id = 'card-' + a.id;
-
-  div.innerHTML = `
-    <div class="apt-header" onclick="toggleCard('${a.id}')">
-      <div class="apt-info">
-        <span class="apt-emoji">${a.emoji}</span>
-        <div>
-          <div class="apt-name">${a.name}</div>
-          <div class="apt-meta" id="meta-${a.id}">${free ? '✅ Elérhető' : '🔴 Foglalt'} · ${blockedCount} nap blokkolva</div>
-        </div>
-      </div>
-      <div class="apt-right">
-        <label class="toggle" onclick="event.stopPropagation()">
-          <input type="checkbox" id="toggle-${a.id}" ${free ? 'checked' : ''} onchange="updateAvail('${a.id}', this.checked)">
-          <span class="slider"></span>
-        </label>
-        <span class="chevron" id="chev-${a.id}">▼</span>
-      </div>
-    </div>
-    <div class="apt-body" id="body-${a.id}">
-      <div class="cal-legend">
-        <span><span class="legend-dot" style="background:#fee2e2"></span>Foglalt nap</span>
-        <span><span class="legend-dot" style="background:#1a1a1a"></span>Kijelölt szakasz</span>
-      </div>
-      <div class="sel-info" id="selinfo-${a.id}">Kattints az első napra</div>
-      <div class="cal-title-row">
-        <button class="cal-nav" onclick="calPrev('${a.id}')">‹</button>
-        <span class="cal-month" id="caltitle-${a.id}"></span>
-        <button class="cal-nav" onclick="calNext('${a.id}')">›</button>
-      </div>
-      <div class="cal-grid" id="calgrid-${a.id}"></div>
-      <div class="cal-actions">
-        <button class="btn-block" onclick="blockDates('${a.id}')">🔴 Foglaltnak jelöl</button>
-        <button class="btn-unblock" onclick="unblockDates('${a.id}')">✅ Felszabadít</button>
-      </div>
-    </div>`;
-
-  // Must append to DOM first so renderCal can find elements
-  document.getElementById('aptList').appendChild(div);
-  renderCal(a.id);
-  return null;
-}
-
-function renderAll() {
+// BUILD UI
+function buildUI() {
   const list = document.getElementById('aptList');
   list.innerHTML = '';
-  apts.forEach(a => buildAptCard(a));
-}
-
-function toggleCard(id) {
-  const body = document.getElementById('body-' + id);
-  const chev = document.getElementById('chev-' + id);
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  chev.classList.toggle('open', !isOpen);
-}
-
-function updateAvail(id, val) {
-  currentStatus[id].available = val;
-  const meta = document.getElementById('meta-' + id);
-  meta.textContent = (val ? '✅ Elérhető' : '🔴 Foglalt') + ' · ' + currentStatus[id].blocked.length + ' nap blokkolva';
-}
-
-const MONTHS = ['Január','Február','Március','Április','Május','Június','Július','Augusztus','Szeptember','Október','November','December'];
-const DAYS = ['H','K','Sz','Cs','P','Sz','V'];
-
-function renderCal(id) {
-  const st = calState[id];
-  const s = currentStatus[id];
-  const today = new Date(); today.setHours(0,0,0,0);
-
-  document.getElementById('caltitle-' + id).textContent = MONTHS[st.month] + ' ' + st.year;
-
-  const grid = document.getElementById('calgrid-' + id);
-  grid.innerHTML = '';
-  DAYS.forEach(d => {
-    const el = document.createElement('div');
-    el.className = 'cal-day-name'; el.textContent = d; grid.appendChild(el);
+  APTS.forEach(a => {
+    const s = STATUS[a.id];
+    const card = document.createElement('div');
+    card.className = 'apt-card';
+    card.id = 'card-'+a.id;
+    card.innerHTML =
+      '<div class="apt-head" id="head-'+a.id+'">' +
+        '<div class="apt-left">' +
+          '<span class="apt-emoji">'+a.emoji+'</span>' +
+          '<div>' +
+            '<div class="apt-name">'+a.name+'</div>' +
+            '<div class="apt-info" id="info-'+a.id+'">'+(s.available?'✅ Elérhető':'🔴 Foglalt')+' · '+s.blocked.length+' nap blokkolva</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="apt-right">' +
+          '<label class="toggle">' +
+            '<input type="checkbox" id="tog-'+a.id+'" '+(s.available?'checked':'')+' onchange="toggleAvail(\''+a.id+'\',this.checked)">' +
+            '<span class="slider"></span>' +
+          '</label>' +
+          '<span class="chevron" id="chev-'+a.id+'">▼</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="apt-body" id="body-'+a.id+'">' +
+        '<div class="cal-legend">' +
+          '<span><span class="leg-dot" style="background:#fee2e2"></span>Foglalt</span>' +
+          '<span><span class="leg-dot" style="background:#1a1a1a"></span>Kijelölt</span>' +
+        '</div>' +
+        '<div class="sel-info" id="si-'+a.id+'">Kattints az első napra</div>' +
+        '<div class="cal-nav-row">' +
+          '<button class="cal-btn" onclick="calPrev(\''+a.id+'\')">‹</button>' +
+          '<span class="cal-month-label" id="cm-'+a.id+'"></span>' +
+          '<button class="cal-btn" onclick="calNext(\''+a.id+'\')">›</button>' +
+        '</div>' +
+        '<div class="cal-grid" id="cg-'+a.id+'"></div>' +
+        '<div class="cal-actions">' +
+          '<button class="btn-block" onclick="doBlock(\''+a.id+'\')">🔴 Foglaltnak jelöl</button>' +
+          '<button class="btn-free" onclick="doFree(\''+a.id+'\')">✅ Felszabadít</button>' +
+        '</div>' +
+      '</div>';
+    list.appendChild(card);
+    // head click
+    document.getElementById('head-'+a.id).addEventListener('click', function(e) {
+      if (e.target.closest('.toggle')) return;
+      toggleBody(a.id);
+    });
+    drawCal(a.id);
   });
+}
 
-  const first = new Date(st.year, st.month, 1);
-  let dow = first.getDay(); dow = dow === 0 ? 6 : dow - 1;
-  for (let i = 0; i < dow; i++) {
-    const el = document.createElement('div'); el.className = 'cal-day empty'; grid.appendChild(el);
+function toggleBody(id) {
+  const body = document.getElementById('body-'+id);
+  const chev = document.getElementById('chev-'+id);
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+}
+
+function toggleAvail(id, val) {
+  STATUS[id].available = val;
+  updateInfo(id);
+}
+
+function updateInfo(id) {
+  const s = STATUS[id];
+  document.getElementById('info-'+id).textContent =
+    (s.available?'✅ Elérhető':'🔴 Foglalt') + ' · ' + s.blocked.length + ' nap blokkolva';
+}
+
+// CALENDAR
+function drawCal(id) {
+  const c = CAL[id];
+  const s = STATUS[id];
+  const t = today0();
+  document.getElementById('cm-'+id).textContent = MONTHS[c.m] + ' ' + c.y;
+  const grid = document.getElementById('cg-'+id);
+  grid.innerHTML = '';
+  ['H','K','Sz','Cs','P','Sz','V'].forEach(d => {
+    const el = document.createElement('div'); el.className='dn'; el.textContent=d; grid.appendChild(el);
+  });
+  let dow = new Date(c.y, c.m, 1).getDay();
+  dow = dow===0?6:dow-1;
+  for (let i=0; i<dow; i++) {
+    const el=document.createElement('button'); el.className='day empty'; grid.appendChild(el);
   }
-
-  const dim = new Date(st.year, st.month + 1, 0).getDate();
-  for (let d = 1; d <= dim; d++) {
-    const date = new Date(st.year, st.month, d);
-    const dateStr = fmtDate(date);
+  const dim = new Date(c.y, c.m+1, 0).getDate();
+  for (let d=1; d<=dim; d++) {
+    const date = new Date(c.y, c.m, d);
+    const ds = fmt(date);
     const el = document.createElement('button');
-    el.className = 'cal-day';
+    el.className = 'day';
     el.textContent = d;
-    if (date.toDateString() === today.toDateString()) el.classList.add('today');
-    if (date < today) { el.classList.add('past'); }
-    else {
-      if (s.blocked.includes(dateStr)) el.classList.add('blocked');
-      // Selection highlight
-      if (st.selStart && st.selEnd) {
-        const ds = new Date(st.selStart), de = new Date(st.selEnd);
-        if (dateStr === st.selStart) el.classList.add('sel-start');
-        else if (dateStr === st.selEnd) el.classList.add('sel-end');
-        else if (date > ds && date < de) el.classList.add('sel-range');
-      } else if (st.selStart && dateStr === st.selStart) {
-        el.classList.add('sel-start', 'sel-end');
+    if (date.toDateString()===t.toDateString()) el.classList.add('today');
+    if (date < t) {
+      el.classList.add('past');
+    } else {
+      if (s.blocked.includes(ds)) el.classList.add('blocked');
+      if (c.s1 && c.s2) {
+        if (ds===c.s1) el.classList.add('sel-s');
+        else if (ds===c.s2) el.classList.add('sel-e');
+        else if (ds>c.s1 && ds<c.s2) el.classList.add('sel-r');
+      } else if (c.s1 && ds===c.s1) {
+        el.classList.add('sel-s','sel-e');
       }
-      el.onclick = () => selectCalDay(id, dateStr);
+      el.addEventListener('click', function() { pickDay(id, ds); });
     }
     grid.appendChild(el);
   }
 }
 
-function selectCalDay(id, dateStr) {
-  const st = calState[id];
-  if (!st.selStart || (st.selStart && st.selEnd)) {
-    st.selStart = dateStr; st.selEnd = null;
-    document.getElementById('selinfo-' + id).textContent = 'Kattints a záró napra';
+function pickDay(id, ds) {
+  const c = CAL[id];
+  const si = document.getElementById('si-'+id);
+  if (!c.s1 || (c.s1 && c.s2)) {
+    c.s1=ds; c.s2=null;
+    si.textContent = 'Kattints a záró napra (kezdő: '+ds+')';
   } else {
-    if (dateStr < st.selStart) { st.selEnd = st.selStart; st.selStart = dateStr; }
-    else if (dateStr === st.selStart) { st.selEnd = null; }
-    else { st.selEnd = dateStr; }
-    document.getElementById('selinfo-' + id).textContent = st.selEnd
-      ? `Kijelölve: ${st.selStart} → ${st.selEnd}`
-      : 'Kattints a záró napra';
+    if (ds<c.s1) { c.s2=c.s1; c.s1=ds; }
+    else if (ds===c.s1) { c.s1=null; c.s2=null; si.textContent='Kattints az első napra'; }
+    else { c.s2=ds; }
+    if (c.s1&&c.s2) si.textContent = 'Kijelölve: '+c.s1+' → '+c.s2;
   }
-  renderCal(id);
+  drawCal(id);
 }
 
-function getDatesInRange(start, end) {
-  const dates = [];
-  let cur = new Date(start);
-  const last = new Date(end);
-  while (cur <= last) {
-    dates.push(fmtDate(cur));
-    cur.setDate(cur.getDate() + 1);
-  }
+function getDates(s1, s2) {
+  const dates=[]; let cur=new Date(s1); const end=new Date(s2);
+  while(cur<=end){ dates.push(fmt(cur)); cur.setDate(cur.getDate()+1); }
   return dates;
 }
 
-function blockDates(id) {
-  const st = calState[id];
-  if (!st.selStart) { showToast('⚠️ Először jelölj ki egy dátumszakaszt!'); return; }
-  const end = st.selEnd || st.selStart;
-  const dates = getDatesInRange(st.selStart, end);
-  const blocked = currentStatus[id].blocked;
-  dates.forEach(d => { if (!blocked.includes(d)) blocked.push(d); });
-  st.selStart = null; st.selEnd = null;
-  document.getElementById('selinfo-' + id).textContent = 'Kattints az első napra';
-  updateMeta(id);
-  renderCal(id);
+function calPrev(id) { const c=CAL[id]; c.m--; if(c.m<0){c.m=11;c.y--;} drawCal(id); }
+function calNext(id) { const c=CAL[id]; c.m++; if(c.m>11){c.m=0;c.y++;} drawCal(id); }
+
+function doBlock(id) {
+  const c=CAL[id];
+  if (!c.s1) { showToast('⚠️ Először jelölj ki napokat!'); return; }
+  const dates = getDates(c.s1, c.s2||c.s1);
+  dates.forEach(d => { if(!STATUS[id].blocked.includes(d)) STATUS[id].blocked.push(d); });
+  c.s1=null; c.s2=null;
+  document.getElementById('si-'+id).textContent='Kattints az első napra';
+  updateInfo(id); drawCal(id);
+  showToast('🔴 '+dates.length+' nap blokkolva');
 }
 
-function unblockDates(id) {
-  const st = calState[id];
-  if (!st.selStart) { showToast('⚠️ Először jelölj ki egy dátumszakaszt!'); return; }
-  const end = st.selEnd || st.selStart;
-  const dates = getDatesInRange(st.selStart, end);
-  currentStatus[id].blocked = currentStatus[id].blocked.filter(d => !dates.includes(d));
-  st.selStart = null; st.selEnd = null;
-  document.getElementById('selinfo-' + id).textContent = 'Kattints az első napra';
-  updateMeta(id);
-  renderCal(id);
+function doFree(id) {
+  const c=CAL[id];
+  if (!c.s1) { showToast('⚠️ Először jelölj ki napokat!'); return; }
+  const dates = getDates(c.s1, c.s2||c.s1);
+  STATUS[id].blocked = STATUS[id].blocked.filter(d=>!dates.includes(d));
+  c.s1=null; c.s2=null;
+  document.getElementById('si-'+id).textContent='Kattints az első napra';
+  updateInfo(id); drawCal(id);
+  showToast('✅ '+dates.length+' nap felszabadítva');
 }
 
-function updateMeta(id) {
-  const s = currentStatus[id];
-  document.getElementById('meta-' + id).textContent =
-    (s.available ? '✅ Elérhető' : '🔴 Foglalt') + ' · ' + s.blocked.length + ' nap blokkolva';
-}
-
-function calPrev(id) { const st = calState[id]; st.month--; if (st.month < 0) { st.month = 11; st.year--; } renderCal(id); }
-function calNext(id) { const st = calState[id]; st.month++; if (st.month > 11) { st.month = 0; st.year++; } renderCal(id); }
-
-function fmtDate(d) {
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-}
-
-async function saveStatus() {
-  const btn = document.getElementById('saveBtn');
-  btn.disabled = true; btn.textContent = 'Mentés folyamatban...';
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(currentStatus, null, 2))));
+// SAVE
+async function doSave() {
+  const btn=document.getElementById('saveBtn');
+  btn.disabled=true; btn.textContent='Mentés...';
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(STATUS, null, 2))));
   try {
-    const body = { message: 'Státusz frissítve', content, branch: BRANCH };
-    if (fileSha) body.sha = fileSha;
-    const res = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
-      method: 'PUT',
-      headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    const body = { message:'Státusz frissítve', content, branch:BRANCH };
+    if (SHA) body.sha = SHA;
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE}`, {
+      method:'PUT',
+      headers:{ 'Authorization':'token '+TOKEN, 'Accept':'application/vnd.github.v3+json', 'Content-Type':'application/json' },
       body: JSON.stringify(body)
     });
-    if (res.ok) {
-      const data = await res.json();
-      fileSha = data.content.sha;
-      showToast('✅ Sikeresen mentve!');
-    } else {
-      const err = await res.json();
-      showToast('❌ Hiba: ' + (err.message || 'ismeretlen'));
-    }
+    if (r.ok) { const d=await r.json(); SHA=d.content.sha; showToast('✅ Sikeresen mentve!'); }
+    else { const e=await r.json(); showToast('❌ Hiba: '+(e.message||'?')); }
   } catch(e) { showToast('❌ Kapcsolati hiba'); }
-  btn.disabled = false; btn.textContent = '💾 Mentés és közzététel';
+  btn.disabled=false; btn.textContent='💾 Mentés és közzététel';
 }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
 </script>
 </body>
