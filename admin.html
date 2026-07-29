@@ -167,12 +167,6 @@ async function loadStatus() {
   renderAll();
 }
 
-function renderAll() {
-  const list = document.getElementById('aptList');
-  list.innerHTML = '';
-  apts.forEach(a => list.appendChild(buildAptCard(a)));
-}
-
 function buildAptCard(a) {
   const s = currentStatus[a.id];
   const free = s.available;
@@ -217,8 +211,16 @@ function buildAptCard(a) {
       </div>
     </div>`;
 
+  // Must append to DOM first so renderCal can find elements
+  document.getElementById('aptList').appendChild(div);
   renderCal(a.id);
-  return div;
+  return null;
+}
+
+function renderAll() {
+  const list = document.getElementById('aptList');
+  list.innerHTML = '';
+  apts.forEach(a => buildAptCard(a));
 }
 
 function toggleCard(id) {
