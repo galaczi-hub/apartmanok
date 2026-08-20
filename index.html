@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> CostApartments</title>
+<title>CostApartments</title>
 <meta property="og:type" content="website">
 <meta property="og:title" content="CostApartments — Comfortable Stays in Santa Pola & Alicante">
 <meta property="og:description" content="Fully equipped apartments for longer stays — work, studies, medical treatment or family visits. Simple booking, direct from the owner.">
 <meta property="og:image" content="https://galaczi-hub.github.io/apartmanok/naplemente.jpg">
 <meta property="og:url" content="https://galaczi-hub.github.io/apartmanok/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Apartments — Otthonos szállások Santa Pola és Alicante környékén">
-<meta name="twitter:description" content="Teljesen felszerelt apartmanok hosszabb tartózkodásra — munkavégzésre, tanulmányra, kezelésre vagy családlátogatásra.">
+<meta name="twitter:title" content="CostApartments — Comfortable Stays in Santa Pola & Alicante">
+<meta name="twitter:description" content="Fully equipped apartments for longer stays — work, studies, medical treatment or family visits.">
 <meta name="twitter:image" content="https://galaczi-hub.github.io/apartmanok/naplemente.jpg">
 
 <style>
@@ -24,7 +24,7 @@
     background: #0a1628;
   }
  /* TRANSLATE */
-.translate-bar { text-align: center; padding: 8px; background: #fff; border-bottom: 1px solid #ece9e2; }
+.translate-bar { text-align: center; padding: 8px; background: #fff; border-bottom: 1px solid #ece9e2; position: relative; z-index: 500; }
 #google_translate_element { display: inline-block; }
 .goog-te-gadget { font-size: 12px !important; }
 .goog-te-gadget .goog-te-combo { padding: 4px 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 13px; }
@@ -206,20 +206,18 @@
   }
   .detail-btn:hover { background: rgba(15,23,42,0.95); }
 
- /* TRANSLATE */
-.translate-bar { text-align: center; padding: 8px; background: #fff; border-bottom: 1px solid #ece9e2; }
-.google_translate_element { display: inline-block; }
-.goog-te-gadget { font-size: 12px !important; }
-.goog-te-gadget .goog-te-combo { padding: 4px 8px; border-radius: 6px; border: 1px solid #ddd; font-size: 13px; }
-
 </style>
 </head>
 <body>
 
+<div class="translate-bar">
+  <div id="google_translate_element"></div>
+</div>
+
 <div class="bg-fixed"></div>
 
 <header>
-  <h1> Apartments</h1>
+  <h1>CostApartments</h1>
   <p>Elérhető apartmanjaink</p>
 </header>
 
@@ -281,7 +279,7 @@ const apts = [
     page: "apt-7.html" },
   { id: "apt8", name: "Roof Top Relax", emoji: "", color: "rgba(187, 247, 208, 0.6)", img: "rooftop.JPEG",
     desc: "A Gran Alacant szívében: tetőterasz, közösségi medence, mediterrán nyugalom.",
-    long: "A Roof Top Relax apartman kényelmes kikapcsolódást nyújt, lenyűgőzó tetóteraszáről kilátással a Földközi tengerre és a környező hegyekre. Közösségi medence, saját parkoló, teljesen felszerelt lakás Gran Alacant nyugodt negyedében.",
+    long: "A Roof Top Relax apartman kényelmes kikapcsolódást nyújt, lenyűgőző tetőteraszáról kilátással a Földközi tengerre és a környező hegyekre. Közösségi medence, saját parkoló, teljesen felszerelt lakás Gran Alacant nyugodt negyedében.",
     persons: "4 fő", size: "75 m² + tetőterasz", price: "100 €/éjtől", type: "2 hálószoba, 2 fürdőszoba",
     page: "apt-8.html" },
 
@@ -352,5 +350,19 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 
 loadStatus();
 </script>
+
+<!-- Google Translate -->
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'hu',
+    includedLanguages: 'hu,en,es',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
